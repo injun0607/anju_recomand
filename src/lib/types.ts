@@ -5,7 +5,7 @@ export type QuestionType = 'single' | 'multiple' | 'text' | 'boolean';
 export interface QuestionOption {
   id: string;
   text: string;
-  value: any;
+  value: string | number | boolean;
 }
 
 // 질문 플로우 인터페이스
@@ -21,7 +21,7 @@ export interface QuestionFlow {
 
 // 사용자 답변 인터페이스
 export interface UserAnswers {
-  [key: string]: any;
+  [key: string]: string | string[] | number | boolean;
 }
 
 // 술 종류 타입

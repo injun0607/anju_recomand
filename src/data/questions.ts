@@ -1,4 +1,4 @@
-import { QuestionFlow, UserAnswers } from '@/lib/types';
+import { QuestionFlow } from '@/lib/types';
 
 export const QUESTIONS: Record<string, QuestionFlow> = {
   // 술 종류 선택
@@ -474,14 +474,11 @@ export function getQuestion(questionId: string): QuestionFlow | null {
   return QUESTIONS[questionId] || null;
 }
 
-// 다음 질문을 결정하는 함수 (순서대로)
-export function getNextQuestionId(
-  currentQuestionId: string,
-  answers: UserAnswers
-): string | null {
+// 다음 질문 ID 가져오기
+export function getNextQuestionId(currentQuestionId: string): string | null {
   const currentIndex = QUESTION_ORDER.indexOf(currentQuestionId);
-  if (currentIndex === -1 || currentIndex === QUESTION_ORDER.length - 1) {
-    return null; // 마지막 질문이거나 질문을 찾을 수 없는 경우
+  if (currentIndex === -1 || currentIndex >= QUESTION_ORDER.length - 1) {
+    return null;
   }
   return QUESTION_ORDER[currentIndex + 1];
 } 

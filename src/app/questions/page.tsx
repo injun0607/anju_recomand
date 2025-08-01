@@ -1,28 +1,28 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { QUESTIONS, FIRST_QUESTION_ID, QUESTION_ORDER } from '@/data/questions';
 import { useAppStore, useAppActions } from '@/store/useAppStore';
-import { QuestionFlow, UserAnswers } from '@/lib/types';
+import { QuestionFlow } from '@/lib/types';
 
 export default function QuestionsPage() {
   const router = useRouter();
   //여기선 상태만 가져오고
-  const { currentQuestion, answers } = useAppStore();
+  const { currentQuestion } = useAppStore();
   //데이터 핸들링은 이 함수들로 하는것같네
   const { setCurrentQuestion, addAnswer, setQuestionProgress } = useAppActions();
   
   const [currentQuestionData, setCurrentQuestionData] = useState<QuestionFlow | null>(null);
-  const [selectedAnswers, setSelectedAnswers] = useState<Record<string, any>>({});
+  const [selectedAnswers, setSelectedAnswers] = useState<Record<string, string | string[]>>({});
   const [currentStep, setCurrentStep] = useState(1);
   const [totalSteps, setTotalSteps] = useState(0);
   const [completedSteps, setCompletedSteps] = useState<number[]>([]);
 
   // 진행 상황 계산
-  const calculateProgress = () => {
+  const calculateProgress = useCallback(() => {
     const currentIndex = QUESTION_ORDER.indexOf(currentQuestion || FIRST_QUESTION_ID);
     const totalQuestions = QUESTION_ORDER.length;
     
@@ -36,7 +36,7 @@ export default function QuestionsPage() {
     if (currentIndex >= 14) completed.push(15);
     if (currentIndex >= 19) completed.push(20);
     setCompletedSteps(completed);
-  };
+  }, [currentQuestion]);
 
   // 현재 질문이 단계 마지막인지 확인
   const isStageEnd = () => {
@@ -74,7 +74,7 @@ export default function QuestionsPage() {
   };
 
   // 답변 선택
-  const handleAnswerSelect = (questionId: string, answer: any) => {
+  const handleAnswerSelect = (questionId: string, answer: string) => {
     const question = QUESTIONS[questionId];
     
     if (question?.type === 'multiple') {
@@ -125,7 +125,7 @@ export default function QuestionsPage() {
       setCurrentQuestionData(questionData);
       calculateProgress();
     }
-  }, [currentQuestion]);
+  }, [currentQuestion, calculateProgress]);
 
   // 진행 상황 저장
   useEffect(() => {
@@ -234,24 +234,24 @@ export default function QuestionsPage() {
                    key={option.id}
                    className={`group cursor-pointer transition-all duration-300 transform hover:scale-105 hover:shadow-xl border-2 ${
                      currentQuestionData.type === 'multiple'
-                       ? (selectedAnswers[currentQuestionData.id] || []).includes(option.value)
+                       ? (selectedAnswers[currentQuestionData.id] || []).includes(String(option.value))
                          ? 'border-blue-500 bg-gradient-to-r from-blue-50 to-blue-100 shadow-lg scale-105'
                          : 'border-gray-200 hover:border-blue-300 bg-white hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50'
-                       : selectedAnswers[currentQuestionData.id] === option.value
+                       : selectedAnswers[currentQuestionData.id] === String(option.value)
                        ? 'border-blue-500 bg-gradient-to-r from-blue-50 to-blue-100 shadow-lg scale-105'
                        : 'border-gray-200 hover:border-blue-300 bg-white hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50'
                    }`}
-                   onClick={() => handleAnswerSelect(currentQuestionData.id, option.value)}
+                   onClick={() => handleAnswerSelect(currentQuestionData.id, String(option.value))}
                  >
                    <CardContent className="p-6">
                      <div className="flex items-center justify-between">
                        <div className="flex items-center space-x-4">
                          <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
                            currentQuestionData.type === 'multiple'
-                             ? (selectedAnswers[currentQuestionData.id] || []).includes(option.value)
+                             ? (selectedAnswers[currentQuestionData.id] || []).includes(String(option.value))
                                ? 'bg-blue-500 text-white'
                                : 'bg-gray-200 text-gray-600 group-hover:bg-blue-100 group-hover:text-blue-600'
-                             : selectedAnswers[currentQuestionData.id] === option.value
+                             : selectedAnswers[currentQuestionData.id] === String(option.value)
                              ? 'bg-blue-500 text-white'
                              : 'bg-gray-200 text-gray-600 group-hover:bg-blue-100 group-hover:text-blue-600'
                          }`}>
@@ -261,15 +261,15 @@ export default function QuestionsPage() {
                        </div>
                        <div className={`transition-all duration-300 ${
                          currentQuestionData.type === 'multiple'
-                           ? (selectedAnswers[currentQuestionData.id] || []).includes(option.value)
+                           ? (selectedAnswers[currentQuestionData.id] || []).includes(String(option.value))
                              ? 'opacity-100 scale-100'
                              : 'opacity-0 scale-75'
-                           : selectedAnswers[currentQuestionData.id] === option.value
+                           : selectedAnswers[currentQuestionData.id] === String(option.value)
                            ? 'opacity-100 scale-100'
                            : 'opacity-0 scale-75'
                        }`}>
                          {currentQuestionData.type === 'multiple' ? (
-                           (selectedAnswers[currentQuestionData.id] || []).includes(option.value) && (
+                           (selectedAnswers[currentQuestionData.id] || []).includes(String(option.value)) && (
                              <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center shadow-lg">
                                <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
                                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
@@ -277,7 +277,7 @@ export default function QuestionsPage() {
                              </div>
                            )
                          ) : (
-                           selectedAnswers[currentQuestionData.id] === option.value && (
+                           selectedAnswers[currentQuestionData.id] === String(option.value) && (
                              <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center shadow-lg">
                                <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
                                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />

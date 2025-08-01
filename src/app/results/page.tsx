@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
@@ -8,19 +8,25 @@ import { useAppStore, useAppActions } from '@/store/useAppStore';
 import { getRecommendations } from '@/data/side-dishes';
 import { DRINK_TYPES } from '@/lib/constants';
 import { generateKakaoShareUrl } from '@/lib/utils';
-import { DrinkType } from '@/lib/types';
+import { DrinkType, SideDish } from '@/lib/types';
+
+interface RecommendedDish extends SideDish {
+  score: number;
+  rawScore: number;
+  maxScore: number;
+}
 
 export default function ResultsPage() {
   const router = useRouter();
-  const { answers, recommendations, setRecommendations } = useAppStore();
+  const { answers, setRecommendations } = useAppStore();
   const { reset } = useAppActions();
   
-  const [recommendedDishes, setRecommendedDishes] = useState<any[]>([]);
+  const [recommendedDishes, setRecommendedDishes] = useState<RecommendedDish[]>([]);
   const [selectedDrinkType, setSelectedDrinkType] = useState<DrinkType | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   // 추천 로직 실행
-  const generateRecommendations = () => {
+  const generateRecommendations = useCallback(() => {
     if (!answers || Object.keys(answers).length === 0) {
       router.push('/questions');
       return;
@@ -35,14 +41,14 @@ export default function ResultsPage() {
     setSelectedDrinkType(answers['drink-type'] as DrinkType);
     setIsLoading(false);
 
-    // 추천 결과 저장 (타입 호환성을 위해 any 사용)
+    // 추천 결과 저장
     setRecommendations([{
-      sideDishes: recommendations as any,
+      sideDishes: recommendations,
       drinkType: answers['drink-type'] as DrinkType,
       reasoning: `선택하신 ${DRINK_TYPES[answers['drink-type'] as DrinkType]?.name}와 잘 어울리는 안주들을 추천드립니다.`,
       confidence: 0.85
     }]);
-  };
+  }, [answers, router, setRecommendations]);
 
   // 카카오톡 공유
   const handleShare = () => {
@@ -63,7 +69,7 @@ export default function ResultsPage() {
 
   useEffect(() => {
     generateRecommendations();
-  }, []);
+  }, [generateRecommendations]);
 
   if (isLoading) {
     return (

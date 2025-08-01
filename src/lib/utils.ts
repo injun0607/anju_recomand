@@ -1,4 +1,4 @@
-import { UserAnswers, SideDish, DrinkType, Preference, Restriction } from './types';
+import { UserAnswers, SideDish, DrinkType, Taste, Restriction } from './types';
 
 /**
  * 로컬 스토리지에서 데이터를 가져오는 함수
@@ -67,7 +67,7 @@ export function getSessionId(): string {
 export function getNextQuestion(
   currentQuestionId: string,
   answers: UserAnswers,
-  questionFlow: Record<string, any>
+  questionFlow: Record<string, { nextQuestion?: string | ((answers: UserAnswers) => string) }>
 ): string | null {
   const currentQuestion = questionFlow[currentQuestionId];
   
@@ -86,30 +86,28 @@ export function getNextQuestion(
 export function calculateRecommendationScore(
   sideDish: SideDish,
   drinkType: DrinkType,
-  preferences: Preference[],
+  taste: Taste[],
   restrictions: Restriction[]
 ): number {
   let score = 0;
   
   // 술 종류 호환성 체크
-  if (sideDish.drinkCompatibility.includes(drinkType)) {
+  if (sideDish.tags.drinkType.includes(drinkType)) {
     score += 30;
   }
   
   // 선호도 매칭
-  const preferenceMatches = preferences.filter(pref => 
-    sideDish.preferences.includes(pref)
+  const preferenceMatches = taste.filter(taste => 
+    sideDish.tags.taste.includes(taste)
   ).length;
   score += preferenceMatches * 20;
   
   // 제한사항 체크 (제한사항이 있으면 점수 감점)
   const restrictionMatches = restrictions.filter(restriction => 
-    sideDish.restrictions.includes(restriction)
+    sideDish.tags.restrictions.includes(restriction)
   ).length;
   score -= restrictionMatches * 50;
   
-  // 인기도 점수
-  score += sideDish.popularity * 2;
   
   return Math.max(0, score);
 }
@@ -120,12 +118,12 @@ export function calculateRecommendationScore(
 export function sortSideDishesByScore(
   sideDishes: SideDish[],
   drinkType: DrinkType,
-  preferences: Preference[],
+  taste: Taste[],
   restrictions: Restriction[]
 ): SideDish[] {
   return [...sideDishes].sort((a, b) => {
-    const scoreA = calculateRecommendationScore(a, drinkType, preferences, restrictions);
-    const scoreB = calculateRecommendationScore(b, drinkType, preferences, restrictions);
+    const scoreA = calculateRecommendationScore(a, drinkType, taste, restrictions);
+    const scoreB = calculateRecommendationScore(b, drinkType, taste, restrictions);
     return scoreB - scoreA;
   });
 }
@@ -170,7 +168,7 @@ export function generateKakaoShareUrl(
 /**
  * 디바운스 함수
  */
-export function debounce<T extends (...args: any[]) => any>(
+export function debounce<T extends (...args: unknown[]) => unknown>(
   func: T,
   wait: number
 ): (...args: Parameters<T>) => void {

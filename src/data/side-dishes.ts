@@ -1,4 +1,4 @@
-import { SideDish, DrinkType, Taste, Mood, Hunger, Price, Restriction, Texture, Cook, Smell, Temperature, Style, Feel, Special, Retro, Sns } from '@/lib/types';
+import { SideDish, DrinkType, Restriction } from '@/lib/types';
 
 // 새로운 안주 데이터 구조 (새로운 SideDish 인터페이스에 맞춤)
 export const ANJU_DATA: SideDish[] = [
@@ -1944,7 +1944,7 @@ export const SCORING_CONFIG = {
 };
 
 // 점수 계산 함수
-export function calculateMatchScore(userValue: any, anjuValues: any[], config: any): number {
+export function calculateMatchScore(userValue: string | string[] | number | boolean | undefined, anjuValues: string[], config: { match: number; partial: number }): number {
   if (!userValue || !anjuValues || anjuValues.length === 0) {
     return 0;
   }
@@ -1958,13 +1958,14 @@ export function calculateMatchScore(userValue: any, anjuValues: any[], config: a
     return 0;
   }
 
-  // 단일 값인 경우
-  if (anjuValues.includes(userValue)) {
+  // 단일 값인 경우 (string으로 변환)
+  const stringValue = String(userValue);
+  if (anjuValues.includes(stringValue)) {
     return config.match;
   }
 
   // 부분 매칭 로직 (특별한 경우들)
-  if (userValue === 'none' || anjuValues.includes('none')) {
+  if (stringValue === 'none' || anjuValues.includes('none')) {
     return config.partial;
   }
 
@@ -1972,20 +1973,20 @@ export function calculateMatchScore(userValue: any, anjuValues: any[], config: a
 }
 
 // 제한사항 체크 함수
-export function hasRestriction(userAnswers: any, anju: SideDish): boolean {
+export function hasRestriction(userAnswers: Record<string, string | string[] | number | boolean>, anju: SideDish): boolean {
   const userRestrictions = userAnswers['restrictions'] || [];
   const anjuRestrictions = anju.tags.restrictions || [];
 
   // 사용자가 제한하는 재료가 안주에 포함되어 있으면 제외
-  return userRestrictions.some((restriction: Restriction) =>
-    anjuRestrictions.includes(restriction)
+  return (Array.isArray(userRestrictions) ? userRestrictions : []).some((restriction: string) =>
+    anjuRestrictions.includes(restriction as Restriction)
   );
 }
 
 // 메인 추천 함수
-export function getRecommendations(userAnswers: any, count: number = 5): (SideDish & { score: number; rawScore: number; maxScore: number })[] {
+export function getRecommendations(userAnswers: Record<string, string | string[] | number | boolean>, count: number = 5): (SideDish & { score: number; rawScore: number; maxScore: number })[] {
   // 1. 제한사항 체크하여 필터링
-  let candidates = ANJU_DATA.filter(anju => !hasRestriction(userAnswers, anju));
+  const candidates = ANJU_DATA.filter(anju => !hasRestriction(userAnswers, anju));
 
   // 2. 점수 계산
   const scoredAnju = candidates.map(anju => {

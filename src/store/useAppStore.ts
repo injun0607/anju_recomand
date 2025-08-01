@@ -1,12 +1,12 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { AppState, UserAnswers, RecommendationResult, QuestionProgress } from '@/lib/types';
-import { getFromStorage, setToStorage, generateId } from '@/lib/utils';
+import { getFromStorage, setToStorage } from '@/lib/utils';
 
 interface AppStore extends AppState {
   // 액션들
   setCurrentQuestion: (questionId: string | null) => void;
-  addAnswer: (questionId: string, answer: any) => void;
+  addAnswer: (questionId: string, answer: string | string[] | number | boolean) => void;
   setAnswers: (answers: UserAnswers) => void;
   clearAnswers: () => void;
   setRecommendations: (recommendations: RecommendationResult[]) => void;
@@ -43,7 +43,7 @@ export const useAppStore = create<AppStore>()(
       },
 
       // 답변 추가
-      addAnswer: (questionId: string, answer: any) => {
+      addAnswer: (questionId: string, answer: string | string[] | number | boolean) => {
         set((state: AppState) => ({
           answers: {
             ...state.answers,
