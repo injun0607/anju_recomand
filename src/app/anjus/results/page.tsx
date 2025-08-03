@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { useAppStore, useAppActions } from '@/store/useAppStore';
@@ -18,24 +18,32 @@ interface RecommendedDish extends SideDish {
 
 export default function ResultsPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { answers, setRecommendations } = useAppStore();
   const { reset } = useAppActions();
   
   const [recommendedDishes, setRecommendedDishes] = useState<RecommendedDish[]>([]);
   const [selectedDrinkType, setSelectedDrinkType] = useState<DrinkType | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  
+  // 중간 결과인지 확인
+  const isIntermediate = searchParams.get('intermediate') === 'true';
 
+  const goHome = () => {
+    router.push('/anjus');
+  }
   // 추천 로직 실행
   const generateRecommendations = useCallback(() => {
     if (!answers || Object.keys(answers).length === 0) {
-      router.push('/questions');
+      router.push('/anjus/questions');
       return;
     }
 
     setIsLoading(true);
 
-    // 새로운 점수 시스템으로 추천 생성
-    const recommendations = getRecommendations(answers, 5);
+    // 중간 결과인 경우 더 적은 수의 추천 결과 제공
+    const maxResults = isIntermediate ? 3 : 5;
+    const recommendations = getRecommendations(answers, maxResults);
     
     setRecommendedDishes(recommendations);
     setSelectedDrinkType(answers['drink-type'] as DrinkType);
@@ -45,10 +53,12 @@ export default function ResultsPage() {
     setRecommendations([{
       sideDishes: recommendations,
       drinkType: answers['drink-type'] as DrinkType,
-      reasoning: `선택하신 ${DRINK_TYPES[answers['drink-type'] as DrinkType]?.name}와 잘 어울리는 안주들을 추천드립니다.`,
-      confidence: 0.85
+      reasoning: isIntermediate 
+        ? `지금까지의 답변으로 추천하는 안주들입니다. 더 정확한 결과를 원하시면 계속 진행해보세요!`
+        : `선택하신 ${DRINK_TYPES[answers['drink-type'] as DrinkType]?.name}와 잘 어울리는 안주들을 추천드립니다.`,
+      confidence: isIntermediate ? 0.65 : 0.85
     }]);
-  }, [answers, router, setRecommendations]);
+  }, [answers, router, setRecommendations, isIntermediate]);
 
   // 카카오톡 공유
   const handleShare = () => {
@@ -64,7 +74,12 @@ export default function ResultsPage() {
   // 다시 시작
   const handleRestart = () => {
     reset();
-    router.push('/questions');
+    router.push('/anjus/questions');
+  };
+
+  // 계속 진행 (중간 결과에서)
+  const handleContinue = () => {
+    router.push('/anjus/questions');
   };
 
   useEffect(() => {
@@ -88,7 +103,7 @@ export default function ResultsPage() {
       <header className="bg-white shadow-sm">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
-            <h1 className="text-xl font-bold text-gray-900">🍺 안주 추천 결과</h1>
+            <h1 className="text-xl font-bold text-gray-900 cursor-pointer" onClick={goHome}>🍺 안주 추천</h1>
             <div className="flex space-x-4">
               <Button variant="outline" onClick={handleShare}>
                 카카오톡 공유
@@ -107,7 +122,7 @@ export default function ResultsPage() {
         <Card className="mb-8">
           <CardHeader className="text-center">
             <CardTitle className="text-3xl mb-2">
-              🎉 추천 결과
+              {isIntermediate ? '🔍 중간 결과 미리보기' : '🎉 추천 결과'}
             </CardTitle>
             <CardDescription className="text-lg">
               {selectedDrinkType && (
@@ -115,10 +130,20 @@ export default function ResultsPage() {
                   <span className="text-2xl mr-2">
                     {DRINK_TYPES[selectedDrinkType].icon}
                   </span>
-                  {DRINK_TYPES[selectedDrinkType].name}와 함께 즐기기 좋은 안주를 추천드립니다!
+                  {isIntermediate 
+                    ? `${DRINK_TYPES[selectedDrinkType].name}와 어울릴 수 있는 안주들을 미리 확인해보세요!`
+                    : `${DRINK_TYPES[selectedDrinkType].name}와 함께 즐기기 좋은 안주를 추천드립니다!`
+                  }
                 </>
               )}
             </CardDescription>
+            {isIntermediate && (
+              <div className="mt-4 p-4 bg-gradient-to-r from-yellow-50 to-orange-50 rounded-lg border border-yellow-200">
+                <p className="text-yellow-800 text-sm">
+                  💡 이는 지금까지의 답변으로 추천하는 결과입니다. 더 정확한 결과를 원하시면 계속 진행해보세요!
+                </p>
+              </div>
+            )}
           </CardHeader>
         </Card>
 
@@ -215,19 +240,47 @@ export default function ResultsPage() {
         </div>
 
         {/* 액션 버튼 */}
-        <div className="text-center space-y-4">
-          <div className="flex justify-center space-x-4">
-            <Button onClick={handleShare} size="lg" className="px-8">
-              카카오톡으로 공유하기
-            </Button>
-            <Button variant="outline" onClick={handleRestart} size="lg" className="px-8">
-              다시 추천받기
-            </Button>
-          </div>
+        <div className="w-full text-center space-y-4">
+          {isIntermediate ? (
+            <div className="flex flex-col space-y-4">
+              {/* 1층: 계속하기 버튼 */}
+              <div className="flex justify-center w-full max-w-md mx-auto">
+                <Button onClick={handleContinue} size="lg" className="w-full px-4 sm:px-6 lg:px-8 py-2 sm:py-3 lg:py-4 text-sm sm:text-base lg:text-lg font-bold bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl">
+                  <span className="mr-1 sm:mr-2">➡️</span>
+                  더 정확한 결과를 위해 계속하기
+                </Button>
+              </div>
+              
+              {/* 2층: 처음부터 다시 시작 버튼 */}
+              <div className="flex justify-center w-full max-w-md mx-auto">
+                <Button variant="outline" onClick={handleRestart} size="lg" className="w-full px-4 sm:px-6 lg:px-8 py-2 sm:py-3 lg:py-4 text-sm sm:text-base lg:text-lg font-bold border-2 border-gray-300 text-gray-600 hover:border-gray-400 hover:bg-gray-50 hover:text-gray-700 transition-all duration-300 shadow-md">
+                  처음부터 다시 시작
+                </Button>
+              </div>
+            </div>
+          ) : (
+            <div className="flex flex-col space-y-4">
+              {/* 1층: 공유하기 버튼 */}
+              <div className="flex justify-center w-full max-w-md mx-auto">
+                <Button onClick={handleShare} size="lg" className="w-full px-4 sm:px-6 lg:px-8 py-2 sm:py-3 lg:py-4 text-sm sm:text-base lg:text-lg font-bold bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl">
+                  카카오톡으로 공유하기
+                </Button>
+              </div>
+              
+              {/* 2층: 다시 추천받기 버튼 */}
+              <div className="flex justify-center w-full max-w-md mx-auto">
+                <Button variant="outline" onClick={handleRestart} size="lg" className="w-full px-4 sm:px-6 lg:px-8 py-2 sm:py-3 lg:py-4 text-sm sm:text-base lg:text-lg font-bold border-2 border-gray-300 text-gray-600 hover:border-gray-400 hover:bg-gray-50 hover:text-gray-700 transition-all duration-300 shadow-md">
+                  다시 추천받기
+                </Button>
+              </div>
+            </div>
+          )}
           
-          <p className="text-gray-600 text-sm">
-            다른 사람들과 함께 즐거운 시간 보내세요! 🍻
-          </p>
+          {!isIntermediate && (
+            <p className="text-gray-600 text-sm">
+              다른 사람들과 함께 즐거운 시간 보내세요! 🍻
+            </p>
+          )}
         </div>
       </main>
     </div>

@@ -18,6 +18,11 @@ interface AppStore extends AppState {
   setQuestionProgress: (progress: QuestionProgress) => void;
   reset: () => void;
   
+  // 뒤로가기 관련 액션들
+  goToPreviousQuestion: () => void;
+  canGoBack: () => boolean;
+  getPreviousQuestion: () => string | null;
+  
   // 계산된 값들
   getQuestionProgress: () => QuestionProgress;
   getCurrentAnswers: () => UserAnswers;
@@ -125,6 +130,45 @@ export const useAppStore = create<AppStore>()(
         });
       },
 
+      // 이전 질문으로 이동
+      goToPreviousQuestion: () => {
+        const { currentQuestion, answers } = get();
+        if (!currentQuestion) return;
+
+        // 질문 순서에서 현재 질문의 인덱스를 찾음
+        const { QUESTION_ORDER, FIRST_QUESTION_ID } = require('@/data/questions');
+        const currentIndex = QUESTION_ORDER.indexOf(currentQuestion);
+        
+        if (currentIndex > 0) {
+          const previousQuestionId = QUESTION_ORDER[currentIndex - 1];
+          set({ currentQuestion: previousQuestionId });
+        }
+      },
+
+      // 뒤로가기 가능 여부 확인
+      canGoBack: () => {
+        const { currentQuestion } = get();
+        if (!currentQuestion) return false;
+
+        const { QUESTION_ORDER } = require('@/data/questions');
+        const currentIndex = QUESTION_ORDER.indexOf(currentQuestion);
+        return currentIndex > 0;
+      },
+
+      // 이전 질문 ID 가져오기
+      getPreviousQuestion: () => {
+        const { currentQuestion } = get();
+        if (!currentQuestion) return null;
+
+        const { QUESTION_ORDER } = require('@/data/questions');
+        const currentIndex = QUESTION_ORDER.indexOf(currentQuestion);
+        
+        if (currentIndex > 0) {
+          return QUESTION_ORDER[currentIndex - 1];
+        }
+        return null;
+      },
+
       // 질문 진행 상태 가져오기
       getQuestionProgress: () => {
         return getFromStorage('anju_question_progress', {
@@ -178,5 +222,8 @@ export const useAppActions = () => {
     clearError: store.clearError,
     setQuestionProgress: store.setQuestionProgress,
     reset: store.reset,
+    goToPreviousQuestion: store.goToPreviousQuestion,
+    canGoBack: store.canGoBack,
+    getPreviousQuestion: store.getPreviousQuestion,
   };
 }; 

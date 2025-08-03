@@ -18,26 +18,26 @@ export const QUESTIONS: Record<string, QuestionFlow> = {
         text: '맥주',
         value: 'beer',
       },
-      // {
-      //   id: 'wine',
-      //   text: '와인',
-      //   value: 'wine',
-      // },
+      {
+        id: 'wine',
+        text: '와인',
+        value: 'wine',
+      },
       {
         id: 'makgeolli',
         text: '막걸리',
         value: 'makgeolli',
       },
-      // {
-      //   id: 'whiskey',
-      //   text: '위스키',
-      //   value: 'whiskey',
-      // },
-      // {
-      //   id: 'cocktail',
-      //   text: '칵테일',
-      //   value: 'cocktail',
-      // }
+      {
+         id: 'whiskey',
+         text: '위스키',
+         value: 'whiskey',
+       },
+       {
+         id: 'cocktail',
+         text: '칵테일',
+         value: 'cocktail',
+       }
     ]
   },
 
