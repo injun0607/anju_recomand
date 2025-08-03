@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { AppState, UserAnswers, RecommendationResult, QuestionProgress } from '@/lib/types';
 import { getFromStorage, setToStorage } from '@/lib/utils';
+import { QUESTION_ORDER } from '@/data/questions';
 
 interface AppStore extends AppState {
   // 액션들
@@ -132,11 +133,10 @@ export const useAppStore = create<AppStore>()(
 
       // 이전 질문으로 이동
       goToPreviousQuestion: () => {
-        const { currentQuestion, answers } = get();
+        const { currentQuestion } = get();
         if (!currentQuestion) return;
 
         // 질문 순서에서 현재 질문의 인덱스를 찾음
-        const { QUESTION_ORDER, FIRST_QUESTION_ID } = require('@/data/questions');
         const currentIndex = QUESTION_ORDER.indexOf(currentQuestion);
         
         if (currentIndex > 0) {
@@ -150,7 +150,6 @@ export const useAppStore = create<AppStore>()(
         const { currentQuestion } = get();
         if (!currentQuestion) return false;
 
-        const { QUESTION_ORDER } = require('@/data/questions');
         const currentIndex = QUESTION_ORDER.indexOf(currentQuestion);
         return currentIndex > 0;
       },
@@ -160,7 +159,6 @@ export const useAppStore = create<AppStore>()(
         const { currentQuestion } = get();
         if (!currentQuestion) return null;
 
-        const { QUESTION_ORDER } = require('@/data/questions');
         const currentIndex = QUESTION_ORDER.indexOf(currentQuestion);
         
         if (currentIndex > 0) {

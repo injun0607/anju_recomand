@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
@@ -16,7 +16,8 @@ interface RecommendedDish extends SideDish {
   maxScore: number;
 }
 
-export default function ResultsPage() {
+// useSearchParams를 사용하는 내부 컴포넌트
+function ResultsContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { answers, setRecommendations } = useAppStore();
@@ -284,5 +285,26 @@ export default function ResultsPage() {
         </div>
       </main>
     </div>
+  );
+}
+
+// 로딩 컴포넌트
+function ResultsLoading() {
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+        <p className="text-gray-600">페이지를 로딩하는 중...</p>
+      </div>
+    </div>
+  );
+}
+
+// 메인 컴포넌트
+export default function ResultsPage() {
+  return (
+    <Suspense fallback={<ResultsLoading />}>
+      <ResultsContent />
+    </Suspense>
   );
 } 
