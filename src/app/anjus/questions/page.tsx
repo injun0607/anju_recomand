@@ -41,7 +41,7 @@ export default function QuestionsPage() {
   const goHome = () => {
     router.push('/anjus');
   }
-  
+
   // 현재 질문이 단계 마지막인지 확인
   const isStageEnd = () => {
     const currentIndex = QUESTION_ORDER.indexOf(currentQuestion || FIRST_QUESTION_ID);
@@ -195,44 +195,44 @@ export default function QuestionsPage() {
 
   if (!currentQuestionData) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
+      <div className="min-h-screen bg-[#FAFAFA] flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">질문을 불러오는 중...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#FF6363] mx-auto mb-4"></div>
+          <p className="text-[#888888]">질문을 불러오는 중...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+    <div className="min-h-screen bg-[#FAFAFA]">
       {/* 헤더 */}
-      <header className="bg-gradient-to-r from-blue-600 to-purple-700 shadow-lg">
+      <header className="bg-white shadow-sm border-b border-gray-100">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-6">
             <div className="flex items-center space-x-3">
-              <h1 className="text-2xl font-bold text-white cursor-pointer" onClick={goHome}>안주 추천</h1>
+              <h1 className="text-2xl font-bold text-[#333333] cursor-pointer" onClick={goHome}>안주 추천</h1>
             </div>
           </div>
         </div>
       </header>
 
       {/* 진행 상황 바 */}
-      <div className="bg-white shadow-md">
+      <div className="bg-white shadow-sm">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center space-x-2">
-              <div className="w-3 h-3 bg-blue-500 rounded-full animate-pulse"></div>
-              <span className="text-sm font-semibold text-gray-700">진행 상황</span>
+              <div className="w-3 h-3 bg-[#7AC8A4] rounded-full animate-pulse"></div>
+              <span className="text-sm font-semibold text-[#333333]">진행 상황</span>
             </div>
-            <span className="text-sm font-bold text-blue-600 bg-blue-100 px-3 py-1 rounded-full">
+            <span className="text-sm font-bold text-[#FF6363] bg-[#FF6363]/10 px-3 py-1 rounded-full">
               {Math.round((currentStep / totalSteps) * 100)}%
             </span>
           </div>
           <div className="relative">
             <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
               <div
-                className="bg-gradient-to-r from-blue-500 to-purple-600 h-3 rounded-full transition-all duration-500 ease-out shadow-sm"
+                className="bg-[#FF6363] h-3 rounded-full transition-all duration-500 ease-out shadow-sm"
                 style={{ width: `${(currentStep / totalSteps) * 100}%` }}
               ></div>
             </div>
@@ -243,14 +243,14 @@ export default function QuestionsPage() {
       {/* 메인 콘텐츠 */}
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* 질문 카드 */}
-        <Card className="mb-8 bg-gradient-to-br from-white to-blue-50 border-0 shadow-lg">
+        <Card className="mb-8 bg-white border-0 shadow-[0_4px_12px_rgba(0,0,0,0.05)] rounded-2xl">
           <CardHeader className="text-center pb-6">
             <div className="mb-4">
-              <div className="inline-flex items-center justify-center mb-4 font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+              <div className="inline-flex items-center justify-center mb-4 font-bold text-[#FF6363]">
                 <span className="text-2xl">{currentStep} / {totalSteps}</span>
               </div>
             </div>
-            <CardTitle className="text-xl sm:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+            <CardTitle className="text-xl sm:text-2xl lg:text-3xl font-bold text-[#333333]">
               {currentQuestionData.question}
             </CardTitle>
           </CardHeader>
@@ -259,13 +259,13 @@ export default function QuestionsPage() {
               {currentQuestionData.options?.map((option, index) => (
                 <Card
                   key={option.id}
-                  className={`group cursor-pointer transition-all duration-300 transform hover:scale-105 hover:shadow-xl border-2 ${currentQuestionData.type === 'multiple'
-                    ? (selectedAnswers[currentQuestionData.id] || []).includes(String(option.value))
-                      ? 'border-blue-500 bg-gradient-to-r from-blue-50 to-blue-100 shadow-lg scale-105'
-                      : 'border-gray-200 hover:border-blue-300 bg-white hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50'
-                    : selectedAnswers[currentQuestionData.id] === String(option.value)
-                      ? 'border-blue-500 bg-gradient-to-r from-blue-50 to-blue-100 shadow-lg scale-105'
-                      : 'border-gray-200 hover:border-blue-300 bg-white hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50'
+                  className={`group cursor-pointer transition-all duration-300 transform hover:scale-[1.03] hover:shadow-[0_4px_12px_rgba(0,0,0,0.05)] border-2 rounded-2xl ${currentQuestionData.type === 'multiple'
+                      ? (selectedAnswers[currentQuestionData.id] || []).includes(String(option.value))
+                        ? 'border-[#FF6363] bg-[#FF6363]/5 shadow-[0_4px_12px_rgba(0,0,0,0.05)] scale-[1.03]'
+                        : 'border-gray-200 hover:border-[#FF6363]/50 bg-white hover:bg-[#FF6363]/2'
+                      : selectedAnswers[currentQuestionData.id] === String(option.value)
+                        ? 'border-[#FF6363] bg-[#FF6363]/5 shadow-[0_4px_12px_rgba(0,0,0,0.05)] scale-[1.03]'
+                        : 'border-gray-200 hover:border-[#FF6363]/50 bg-white hover:bg-[#FF6363]/2'
                     }`}
                   onClick={() => handleAnswerSelect(currentQuestionData.id, String(option.value))}
                 >
@@ -273,28 +273,28 @@ export default function QuestionsPage() {
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-2 sm:space-x-4">
                         <div className={`w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-xs sm:text-sm font-bold ${currentQuestionData.type === 'multiple'
-                          ? (selectedAnswers[currentQuestionData.id] || []).includes(String(option.value))
-                            ? 'bg-blue-500 text-white'
-                            : 'bg-gray-200 text-gray-600 group-hover:bg-blue-100 group-hover:text-blue-600'
-                          : selectedAnswers[currentQuestionData.id] === String(option.value)
-                            ? 'bg-blue-500 text-white'
-                            : 'bg-gray-200 text-gray-600 group-hover:bg-blue-100 group-hover:text-blue-600'
+                            ? (selectedAnswers[currentQuestionData.id] || []).includes(String(option.value))
+                              ? 'bg-[#FF6363] text-white'
+                              : 'bg-gray-200 text-[#888888] group-hover:bg-[#FF6363]/20 group-hover:text-[#FF6363]'
+                            : selectedAnswers[currentQuestionData.id] === String(option.value)
+                              ? 'bg-[#FF6363] text-white'
+                              : 'bg-gray-200 text-[#888888] group-hover:bg-[#FF6363]/20 group-hover:text-[#FF6363]'
                           }`}>
                           {String.fromCharCode(65 + index)} {/* A, B, C, D... */}
                         </div>
-                        <span className="text-sm sm:text-base lg:text-lg font-semibold text-gray-800">{option.text}</span>
+                        <span className="text-sm sm:text-base lg:text-lg font-semibold text-[#333333]">{option.text}</span>
                       </div>
                       <div className={`transition-all duration-300 ${currentQuestionData.type === 'multiple'
-                        ? (selectedAnswers[currentQuestionData.id] || []).includes(String(option.value))
-                          ? 'opacity-100 scale-100'
-                          : 'opacity-0 scale-75'
-                        : selectedAnswers[currentQuestionData.id] === String(option.value)
-                          ? 'opacity-100 scale-100'
-                          : 'opacity-0 scale-75'
+                          ? (selectedAnswers[currentQuestionData.id] || []).includes(String(option.value))
+                            ? 'opacity-100 scale-100'
+                            : 'opacity-0 scale-75'
+                          : selectedAnswers[currentQuestionData.id] === String(option.value)
+                            ? 'opacity-100 scale-100'
+                            : 'opacity-0 scale-75'
                         }`}>
                         {currentQuestionData.type === 'multiple' ? (
                           (selectedAnswers[currentQuestionData.id] || []).includes(String(option.value)) && (
-                            <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center shadow-lg">
+                            <div className="w-6 h-6 sm:w-8 sm:h-8 bg-[#FF6363] rounded-full flex items-center justify-center shadow-lg">
                               <svg className="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
                                 <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                               </svg>
@@ -302,7 +302,7 @@ export default function QuestionsPage() {
                           )
                         ) : (
                           selectedAnswers[currentQuestionData.id] === String(option.value) && (
-                            <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center shadow-lg">
+                            <div className="w-6 h-6 sm:w-8 sm:h-8 bg-[#FF6363] rounded-full flex items-center justify-center shadow-lg">
                               <svg className="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
                                 <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                               </svg>
@@ -325,9 +325,9 @@ export default function QuestionsPage() {
             (currentQuestionData.type === 'multiple' &&
               (!selectedAnswers[currentQuestionData.id] || selectedAnswers[currentQuestionData.id].length === 0)) && (
               <div className="text-center">
-                <div className="inline-flex items-center space-x-2 bg-gradient-to-r from-yellow-100 to-orange-100 px-4 py-2 rounded-full border border-yellow-200">
-                  <span className="text-yellow-600">💡</span>
-                  <p className="text-yellow-700 text-xs sm:text-sm font-medium">
+                <div className="inline-flex items-center space-x-2 bg-[#7AC8A4]/10 px-4 py-2 rounded-full border border-[#7AC8A4]/20">
+                  <span className="text-[#7AC8A4]">💡</span>
+                  <p className="text-[#7AC8A4] text-xs sm:text-sm font-medium">
                     {currentQuestionData.type === 'multiple'
                       ? '위의 옵션 중 하나 이상을 선택해주세요'
                       : '위의 옵션 중 하나를 선택해주세요'}
@@ -345,7 +345,7 @@ export default function QuestionsPage() {
                   onClick={handleGoBack}
                   variant="outline"
                   size="lg"
-                  className="px-4 sm:px-6 lg:px-8 py-2 sm:py-3 lg:py-4 text-sm sm:text-base lg:text-lg font-bold border-2 border-blue-300 text-blue-600 hover:border-blue-400 hover:bg-blue-50 hover:text-blue-700 transition-all duration-300 shadow-md"
+                  className="px-4 sm:px-6 lg:px-8 py-2 sm:py-3 lg:py-4 text-sm sm:text-base lg:text-lg font-bold border-2 shadow-[0_4px_12px_rgba(0,0,0,0.05)]"
                 >
                   이전 질문
                 </Button>
@@ -365,8 +365,9 @@ export default function QuestionsPage() {
                         !selectedAnswers[currentQuestionData.id] ||
                         (currentQuestionData.type === 'multiple' && selectedAnswers[currentQuestionData.id].length === 0)
                       }
+                      variant="primary"
                       size="lg"
-                      className="px-4 sm:px-6 lg:px-8 py-2 sm:py-3 lg:py-4 text-sm sm:text-base lg:text-lg font-bold bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl"
+                      className="px-4 sm:px-6 lg:px-8 py-2 sm:py-3 lg:py-4 text-sm sm:text-base lg:text-lg font-bold transform hover:scale-[0.98] transition-all duration-300 shadow-[0_4px_12px_rgba(0,0,0,0.05)] hover:shadow-lg"
                     >
                       계속하기
                     </Button>
@@ -377,7 +378,8 @@ export default function QuestionsPage() {
                         (currentQuestionData.type === 'multiple' && selectedAnswers[currentQuestionData.id].length === 0)
                       }
                       size="lg"
-                      className="px-4 sm:px-6 lg:px-8 py-2 sm:py-3 lg:py-4 text-sm sm:text-base lg:text-lg font-bold bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl"
+                      className="px-4 sm:px-6 lg:px-8 py-2 sm:py-3 lg:py-4 text-sm sm:text-base lg:text-lg font-bold transform hover:scale-[0.98] transition-all duration-300 shadow-[0_4px_12px_rgba(0,0,0,0.05)] hover:shadow-lg"
+                      variant="secondary"
                     >
                       <span className="mr-1 sm:mr-2">🔍</span>
                       지금 바로 결과 확인하기
@@ -390,7 +392,7 @@ export default function QuestionsPage() {
                           onClick={handleGoBack}
                           variant="outline"
                           size="lg"
-                          className="w-full px-4 py-2 text-sm font-bold border-2 border-gray-300 text-gray-600 hover:border-gray-400 hover:bg-gray-50 hover:text-gray-700 transition-all duration-300 shadow-md"
+                          className="w-full px-4 py-2 text-sm font-bold border-2 shadow-[0_4px_12px_rgba(0,0,0,0.05)]"
                         >
                           이전 질문
                         </Button>
@@ -400,7 +402,7 @@ export default function QuestionsPage() {
                 </div>
               ) : isStageEnd() ? (
                 <div className="flex flex-col space-y-2 sm:space-y-4 w-full max-w-md">
-                  <div className="flex flex-col">
+                  <div className="flex flex-col space-y-2 sm:space-y-3">
                     <Button
                       onClick={handleConfirmAnswers}
                       disabled={
@@ -408,7 +410,8 @@ export default function QuestionsPage() {
                         (currentQuestionData.type === 'multiple' && selectedAnswers[currentQuestionData.id].length === 0)
                       }
                       size="lg"
-                      className="px-6 sm:px-8 lg:px-12 py-2 sm:py-3 lg:py-4 text-sm sm:text-base lg:text-lg font-bold bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl"
+                      className="px-6 sm:px-8 lg:px-12 py-2 sm:py-3 lg:py-4 text-sm sm:text-base lg:text-lg font-bold transform hover:scale-[0.98] transition-all duration-300 shadow-[0_4px_12px_rgba(0,0,0,0.05)] hover:shadow-lg"
+                      variant="secondary"
                     >
                       <span className="mr-1 sm:mr-2">✅</span>
                       답변 확인하기
@@ -421,7 +424,7 @@ export default function QuestionsPage() {
                           onClick={handleGoBack}
                           variant="outline"
                           size="lg"
-                          className="w-full px-4 py-2 text-sm font-bold border-2 border-gray-300 text-gray-600 hover:border-gray-400 hover:bg-gray-50 hover:text-gray-700 transition-all duration-300 shadow-md"
+                          className="w-full px-4 py-2 text-sm font-bold border-2 shadow-[0_4px_12px_rgba(0,0,0,0.05)]"
                         >
                           이전 질문
                         </Button>
@@ -431,15 +434,16 @@ export default function QuestionsPage() {
                 </div>
               ) : (
                 <div className="flex flex-col space-y-2 sm:space-y-4 w-full max-w-md">
-                  <div className="flex flex-col">
+                  <div className="flex flex-col space-y-2 sm:space-y-3">
                     <Button
                       onClick={goToNextQuestion}
                       disabled={
                         !selectedAnswers[currentQuestionData.id] ||
                         (currentQuestionData.type === 'multiple' && selectedAnswers[currentQuestionData.id].length === 0)
                       }
+                      variant="primary"
                       size="lg"
-                      className="px-4 sm:px-6 lg:px-8 py-2 sm:py-3 lg:py-4 text-sm sm:text-base lg:text-lg font-bold bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl"
+                      className="px-4 sm:px-6 lg:px-8 py-2 sm:py-3 lg:py-4 text-sm sm:text-base lg:text-lg font-bold transform hover:scale-[0.98] transition-all duration-300 shadow-[0_4px_12px_rgba(0,0,0,0.05)] hover:shadow-lg"
                     >
                       다음 질문
                     </Button>
@@ -451,7 +455,7 @@ export default function QuestionsPage() {
                           onClick={handleGoBack}
                           variant="outline"
                           size="lg"
-                          className="w-full px-4 py-2 text-sm font-bold border-2 border-gray-300 text-gray-600 hover:border-gray-400 hover:bg-gray-50 hover:text-gray-700 transition-all duration-300 shadow-md"
+                          className="w-full px-4 py-2 text-sm font-bold border-2 shadow-[0_4px_12px_rgba(0,0,0,0.05)]"
                         >
                           이전 질문
                         </Button>

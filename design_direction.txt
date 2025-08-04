@@ -1,0 +1,32 @@
+💡 주 배경색	#FAFAFA	매우 밝은 중립 배경 (시야 부담 없음)
+🎯 메인 포인트	#FF6363	트렌디한 복숭아/살구계열, 클릭/선택 강조
+🌱 서브 포인트	#7AC8A4	민트계열, 선택지나 결과 감성 강조에 적합
+📌 버튼/선택지 그림자	rgba(0,0,0,0.05)	부드러운 음영으로 플랫 UI에 깊이 추가
+🔠 텍스트 기본	#333333	가독성 높은 진회색
+🔠 텍스트 보조	#888888	부제목, 설명 등 세부 정보용
+
+폰트
+기본: Pretendard (가장 널리 쓰이는 MZ 스타일 한글 웹폰트)
+대체/서브: Noto Sans KR 또는 Apple SD Gothic Neo
+
+폰트 스타일 가이드
+질문 타이틀: Pretendard Bold 20px
+선택지 텍스트: Pretendard Medium 16px
+결과 텍스트: Pretendard SemiBold 18px
+
+
+질문 카드
+background: white;
+border-radius: 16px;
+padding: 24px;
+box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+transition: transform 0.15s ease;
+선택 시: transform: scale(1.03); + 포인트색 테두리 border: 2px solid #FF6363
+
+일반 버튼
+background: #FF6363;
+color: white;
+border-radius: 12px;
+padding: 12px 20px;
+font-weight: bold;
+hover: opacity: 0.85, 클릭 시: transform: scale(0.98)
