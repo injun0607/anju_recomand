@@ -1,7 +1,5 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
 import { AppState, UserAnswers, RecommendationResult, QuestionProgress } from '@/lib/types';
-import { getFromStorage, setToStorage } from '@/lib/utils';
 import { QUESTION_ORDER } from '@/data/questions';
 
 interface AppStore extends AppState {
@@ -38,163 +36,141 @@ const initialState: AppState = {
   error: null,
 };
 
-export const useAppStore = create<AppStore>()(
-  persist(
-    (set, get) => ({
-      ...initialState,
+export const useAppStore = create<AppStore>()((set, get) => ({
+  ...initialState,
 
-      // 현재 질문 설정
-      setCurrentQuestion: (questionId) => {
-        set({ currentQuestion: questionId });
+  // 현재 질문 설정
+  setCurrentQuestion: (questionId: string | null) => {
+    set({ currentQuestion: questionId });
+  },
+
+  // 답변 추가
+  addAnswer: (questionId: string, answer: string | string[] | number | boolean) => {
+    set((state: AppState) => ({
+      answers: {
+        ...state.answers,
+        [questionId]: answer,
       },
+    }));
+  },
 
-      // 답변 추가
-      addAnswer: (questionId: string, answer: string | string[] | number | boolean) => {
-        set((state: AppState) => ({
-          answers: {
-            ...state.answers,
-            [questionId]: answer,
-          },
-        }));
-        
-        // 로컬 스토리지에 저장
-        const currentAnswers = get().answers;
-        setToStorage('anju_user_answers', {
-          ...currentAnswers,
-          [questionId]: answer,
-        });
-      },
+  // 답변 전체 설정
+  setAnswers: (answers: UserAnswers) => {
+    set({ answers });
+  },
 
-      // 답변 전체 설정
-      setAnswers: (answers: UserAnswers) => {
-        set({ answers });
-        setToStorage('anju_user_answers', answers);
-      },
+  // 답변 초기화
+  clearAnswers: () => {
+    set({ answers: {} });
+  },
 
-      // 답변 초기화
-      clearAnswers: () => {
-        set({ answers: {} });
-        setToStorage('anju_user_answers', {});
-      },
+  // 추천 결과 설정
+  setRecommendations: (recommendations: RecommendationResult[]) => {
+    set({ recommendations });
+  },
 
-      // 추천 결과 설정
-      setRecommendations: (recommendations: RecommendationResult[]) => {
-        set({ recommendations });
-        setToStorage('anju_recommendations', recommendations);
-      },
+  // 추천 결과 추가
+  addRecommendation: (recommendation: RecommendationResult) => {
+    set((state: AppState) => ({
+      recommendations: [...state.recommendations, recommendation],
+    }));
+  },
 
-      // 추천 결과 추가
-      addRecommendation: (recommendation: RecommendationResult) => {
-        set((state: AppState) => ({
-          recommendations: [...state.recommendations, recommendation],
-        }));
-        
-        const currentRecommendations = get().recommendations;
-        setToStorage('anju_recommendations', [...currentRecommendations, recommendation]);
-      },
+  // 추천 결과 초기화
+  clearRecommendations: () => {
+    set({ recommendations: [] });
+  },
 
-      // 추천 결과 초기화
-      clearRecommendations: () => {
-        set({ recommendations: [] });
-        setToStorage('anju_recommendations', []);
-      },
+  // 로딩 상태 설정
+  setLoading: (isLoading: boolean) => {
+    set({ isLoading });
+  },
 
-      // 로딩 상태 설정
-      setLoading: (isLoading: boolean) => {
-        set({ isLoading });
-      },
+  // 에러 설정
+  setError: (error: string | null) => {
+    set({ error });
+  },
 
-      // 에러 설정
-      setError: (error: string | null) => {
-        set({ error });
-      },
+  // 에러 초기화
+  clearError: () => {
+    set({ error: null });
+  },
 
-      // 에러 초기화
-      clearError: () => {
-        set({ error: null });
-      },
+  // 질문 진행 상태 설정
+  setQuestionProgress: (progress: QuestionProgress) => {
+    // 메모리에서만 관리하므로 별도 저장 없음
+  },
 
-      // 질문 진행 상태 설정
-      setQuestionProgress: (progress: QuestionProgress) => {
-        setToStorage('anju_question_progress', progress);
-      },
+  // 전체 초기화
+  reset: () => {
+    set(initialState);
+  },
 
-      // 전체 초기화
-      reset: () => {
-        set(initialState);
-        setToStorage('anju_user_answers', {});
-        setToStorage('anju_recommendations', []);
-        setToStorage('anju_question_progress', {
-          currentStep: 0,
-          totalSteps: 0,
-          completedSteps: [],
-        });
-      },
+  // 이전 질문으로 이동
+  goToPreviousQuestion: () => {
+    const { currentQuestion } = get();
+    if (!currentQuestion) return;
 
-      // 이전 질문으로 이동
-      goToPreviousQuestion: () => {
-        const { currentQuestion } = get();
-        if (!currentQuestion) return;
-
-        // 질문 순서에서 현재 질문의 인덱스를 찾음
-        const currentIndex = QUESTION_ORDER.indexOf(currentQuestion);
-        
-        if (currentIndex > 0) {
-          const previousQuestionId = QUESTION_ORDER[currentIndex - 1];
-          set({ currentQuestion: previousQuestionId });
-        }
-      },
-
-      // 뒤로가기 가능 여부 확인
-      canGoBack: () => {
-        const { currentQuestion } = get();
-        if (!currentQuestion) return false;
-
-        const currentIndex = QUESTION_ORDER.indexOf(currentQuestion);
-        return currentIndex > 0;
-      },
-
-      // 이전 질문 ID 가져오기
-      getPreviousQuestion: () => {
-        const { currentQuestion } = get();
-        if (!currentQuestion) return null;
-
-        const currentIndex = QUESTION_ORDER.indexOf(currentQuestion);
-        
-        if (currentIndex > 0) {
-          return QUESTION_ORDER[currentIndex - 1];
-        }
-        return null;
-      },
-
-      // 질문 진행 상태 가져오기
-      getQuestionProgress: () => {
-        return getFromStorage('anju_question_progress', {
-          currentStep: 0,
-          totalSteps: 0,
-          completedSteps: [],
-        });
-      },
-
-      // 현재 답변 가져오기
-      getCurrentAnswers: () => {
-        return get().answers;
-      },
-
-      // 추천 결과 가져오기
-      getRecommendations: () => {
-        return get().recommendations;
-      },
-    }),
-    {
-      name: 'anju-app-storage',
-      partialize: (state: AppStore) => ({
-        answers: state.answers,
-        recommendations: state.recommendations,
-      }),
+    // 질문 순서에서 현재 질문의 인덱스를 찾음
+    const currentIndex = QUESTION_ORDER.indexOf(currentQuestion);
+    
+    if (currentIndex > 0) {
+      const previousQuestionId = QUESTION_ORDER[currentIndex - 1];
+      set({ currentQuestion: previousQuestionId });
     }
-  )
-);
+  },
+
+  // 뒤로가기 가능 여부 확인
+  canGoBack: () => {
+    const { currentQuestion } = get();
+    if (!currentQuestion) return false;
+
+    const currentIndex = QUESTION_ORDER.indexOf(currentQuestion);
+    return currentIndex > 0;
+  },
+
+  // 이전 질문 ID 가져오기
+  getPreviousQuestion: () => {
+    const { currentQuestion } = get();
+    if (!currentQuestion) return null;
+
+    const currentIndex = QUESTION_ORDER.indexOf(currentQuestion);
+    
+    if (currentIndex > 0) {
+      return QUESTION_ORDER[currentIndex - 1];
+    }
+    return null;
+  },
+
+  // 질문 진행 상태 가져오기
+  getQuestionProgress: () => {
+    const { currentQuestion } = get();
+    if (!currentQuestion) {
+      return {
+        currentStep: 0,
+        totalSteps: 0,
+        completedSteps: [],
+      };
+    }
+
+    const currentIndex = QUESTION_ORDER.indexOf(currentQuestion);
+    return {
+      currentStep: currentIndex + 1,
+      totalSteps: QUESTION_ORDER.length,
+      completedSteps: Array.from({ length: currentIndex }, (_, i) => i),
+    };
+  },
+
+  // 현재 답변 가져오기
+  getCurrentAnswers: () => {
+    return get().answers;
+  },
+
+  // 추천 결과 가져오기
+  getRecommendations: () => {
+    return get().recommendations;
+  },
+}));
 
 // 선택자 함수들
 export const useCurrentQuestion = () => useAppStore((state: AppStore) => state.currentQuestion);

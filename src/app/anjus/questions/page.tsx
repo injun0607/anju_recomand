@@ -13,7 +13,7 @@ export default function QuestionsPage() {
   //여기선 상태만 가져오고
   const { currentQuestion, answers } = useAppStore();
   //데이터 핸들링은 이 함수들로 하는것같네
-  const { setCurrentQuestion, addAnswer, setQuestionProgress, goToPreviousQuestion, canGoBack } = useAppActions();
+  const { setCurrentQuestion, addAnswer, goToPreviousQuestion, canGoBack, reset } = useAppActions();
 
   const [currentQuestionData, setCurrentQuestionData] = useState<QuestionFlow | null>(null);
   const [selectedAnswers, setSelectedAnswers] = useState<Record<string, string | string[]>>({});
@@ -39,6 +39,8 @@ export default function QuestionsPage() {
   }, [currentQuestion]);
 
   const goHome = () => {
+    // 홈으로 돌아갈 때 상태 초기화
+    reset();
     router.push('/anjus');
   }
 
@@ -184,14 +186,9 @@ export default function QuestionsPage() {
     }
   }, [currentQuestion, calculateProgress, answers]);
 
-  // 진행 상황 저장
-  useEffect(() => {
-    setQuestionProgress({
-      currentStep,
-      totalSteps,
-      completedSteps
-    });
-  }, [currentStep, totalSteps, completedSteps, setQuestionProgress]);
+  // 진행 상황은 메모리에서만 관리하므로 별도 저장 불필요
+
+
 
   if (!currentQuestionData) {
     return (
@@ -357,110 +354,101 @@ export default function QuestionsPage() {
               {/* 5번째 질문에서 중간 결과 확인 옵션 */}
               {canShowIntermediateResults() ? (
                 <div className="flex flex-col space-y-2 sm:space-y-4 w-full max-w-md">
+                  <Button
+                    onClick={goToNextQuestion}
+                    disabled={
+                      !selectedAnswers[currentQuestionData.id] ||
+                      (currentQuestionData.type === 'multiple' && selectedAnswers[currentQuestionData.id].length === 0)
+                    }
+                    variant="primary"
+                    size="lg"
+                    className="px-4 sm:px-6 lg:px-8 py-2 sm:py-3 lg:py-4 text-sm sm:text-base lg:text-lg font-bold transform hover:scale-[0.98] transition-all duration-300 shadow-[0_4px_12px_rgba(0,0,0,0.05)] hover:shadow-lg"
+                  >
+                    계속하기
+                  </Button>
+                  <Button
+                    onClick={handleShowIntermediateResults}
+                    disabled={
+                      !selectedAnswers[currentQuestionData.id] ||
+                      (currentQuestionData.type === 'multiple' && selectedAnswers[currentQuestionData.id].length === 0)
+                    }
+                    size="lg"
+                    className="px-4 sm:px-6 lg:px-8 py-2 sm:py-3 lg:py-4 text-sm sm:text-base lg:text-lg font-bold transform hover:scale-[0.98] transition-all duration-300 shadow-[0_4px_12px_rgba(0,0,0,0.05)] hover:shadow-lg"
+                    variant="secondary"
+                  >
+                    지금 바로 결과 확인하기
+                  </Button>
 
-                  <div className="flex flex-col space-y-2 sm:space-y-3">
-                    <Button
-                      onClick={goToNextQuestion}
-                      disabled={
-                        !selectedAnswers[currentQuestionData.id] ||
-                        (currentQuestionData.type === 'multiple' && selectedAnswers[currentQuestionData.id].length === 0)
-                      }
-                      variant="primary"
-                      size="lg"
-                      className="px-4 sm:px-6 lg:px-8 py-2 sm:py-3 lg:py-4 text-sm sm:text-base lg:text-lg font-bold transform hover:scale-[0.98] transition-all duration-300 shadow-[0_4px_12px_rgba(0,0,0,0.05)] hover:shadow-lg"
-                    >
-                      계속하기
-                    </Button>
-                    <Button
-                      onClick={handleShowIntermediateResults}
-                      disabled={
-                        !selectedAnswers[currentQuestionData.id] ||
-                        (currentQuestionData.type === 'multiple' && selectedAnswers[currentQuestionData.id].length === 0)
-                      }
-                      size="lg"
-                      className="px-4 sm:px-6 lg:px-8 py-2 sm:py-3 lg:py-4 text-sm sm:text-base lg:text-lg font-bold transform hover:scale-[0.98] transition-all duration-300 shadow-[0_4px_12px_rgba(0,0,0,0.05)] hover:shadow-lg"
-                      variant="secondary"
-                    >
-                      <span className="mr-1 sm:mr-2">🔍</span>
-                      지금 바로 결과 확인하기
-                    </Button>
-
-                    {/* 모바일 전용 뒤로가기 버튼 */}
-                    <div className="block sm:hidden">
-                      {canGoBack() && (
-                        <Button
-                          onClick={handleGoBack}
-                          variant="outline"
-                          size="lg"
-                          className="w-full px-4 py-2 text-sm font-bold border-2 shadow-[0_4px_12px_rgba(0,0,0,0.05)]"
-                        >
-                          이전 질문
-                        </Button>
-                      )}
-                    </div>
+                  {/* 모바일 전용 뒤로가기 버튼 */}
+                  <div className="block sm:hidden">
+                    {canGoBack() && (
+                      <Button
+                        onClick={handleGoBack}
+                        variant="outline"
+                        size="lg"
+                        className="w-full px-4 py-2 text-sm font-bold border-2 shadow-[0_4px_12px_rgba(0,0,0,0.05)]"
+                      >
+                        이전 질문
+                      </Button>
+                    )}
                   </div>
                 </div>
               ) : isStageEnd() ? (
-                <div className="flex flex-col space-y-2 sm:space-y-4 w-full max-w-md">
-                  <div className="flex flex-col space-y-2 sm:space-y-3">
-                    <Button
-                      onClick={handleConfirmAnswers}
-                      disabled={
-                        !selectedAnswers[currentQuestionData.id] ||
-                        (currentQuestionData.type === 'multiple' && selectedAnswers[currentQuestionData.id].length === 0)
-                      }
-                      size="lg"
-                      className="px-6 sm:px-8 lg:px-12 py-2 sm:py-3 lg:py-4 text-sm sm:text-base lg:text-lg font-bold transform hover:scale-[0.98] transition-all duration-300 shadow-[0_4px_12px_rgba(0,0,0,0.05)] hover:shadow-lg"
-                      variant="secondary"
-                    >
-                      <span className="mr-1 sm:mr-2">✅</span>
-                      답변 확인하기
-                    </Button>
+                <div className="flex flex-col space-y-2 w-full max-w-md">
+                  <Button
+                    onClick={handleConfirmAnswers}
+                    disabled={
+                      !selectedAnswers[currentQuestionData.id] ||
+                      (currentQuestionData.type === 'multiple' && selectedAnswers[currentQuestionData.id].length === 0)
+                    }
+                    size="lg"
+                    className="px-6 sm:px-8 lg:px-12 py-2 sm:py-3 lg:py-4 text-sm sm:text-base lg:text-lg font-bold transform hover:scale-[0.98] transition-all duration-300 shadow-[0_4px_12px_rgba(0,0,0,0.05)] hover:shadow-lg"
+                    variant="secondary"
+                  >
+                    답변 확인하기
+                  </Button>
 
-                    {/* 모바일 전용 뒤로가기 버튼 */}
-                    <div className="block sm:hidden">
-                      {canGoBack() && (
-                        <Button
-                          onClick={handleGoBack}
-                          variant="outline"
-                          size="lg"
-                          className="w-full px-4 py-2 text-sm font-bold border-2 shadow-[0_4px_12px_rgba(0,0,0,0.05)]"
-                        >
-                          이전 질문
-                        </Button>
-                      )}
-                    </div>
+                  {/* 모바일 전용 뒤로가기 버튼 */}
+                  <div className="block sm:hidden">
+                    {canGoBack() && (
+                      <Button
+                        onClick={handleGoBack}
+                        variant="outline"
+                        size="lg"
+                        className="w-full px-4 py-2 text-sm font-bold border-2 shadow-[0_4px_12px_rgba(0,0,0,0.05)]"
+                      >
+                        이전 질문
+                      </Button>
+                    )}
                   </div>
                 </div>
               ) : (
-                <div className="flex flex-col space-y-2 sm:space-y-4 w-full max-w-md">
-                  <div className="flex flex-col space-y-2 sm:space-y-3">
-                    <Button
-                      onClick={goToNextQuestion}
-                      disabled={
-                        !selectedAnswers[currentQuestionData.id] ||
-                        (currentQuestionData.type === 'multiple' && selectedAnswers[currentQuestionData.id].length === 0)
-                      }
-                      variant="primary"
-                      size="lg"
-                      className="px-4 sm:px-6 lg:px-8 py-2 sm:py-3 lg:py-4 text-sm sm:text-base lg:text-lg font-bold transform hover:scale-[0.98] transition-all duration-300 shadow-[0_4px_12px_rgba(0,0,0,0.05)] hover:shadow-lg"
-                    >
-                      다음 질문
-                    </Button>
+                <div className="flex flex-col xs:space-y-2 w-full max-w-md">                  
+                  <Button
+                    onClick={goToNextQuestion}
+                    disabled={
+                      !selectedAnswers[currentQuestionData.id] ||
+                      (currentQuestionData.type === 'multiple' && selectedAnswers[currentQuestionData.id].length === 0)
+                    }
+                    variant="primary"
+                    size="lg"
+                    className="px-4 sm:px-6 lg:px-8 py-2 sm:py-3 lg:py-4 text-sm sm:text-base lg:text-lg font-bold transform hover:scale-[0.98] transition-all duration-300 shadow-[0_4px_12px_rgba(0,0,0,0.05)] hover:shadow-lg"
+                  >
+                    다음 질문
+                  </Button>
 
-                    {/* 모바일 전용 뒤로가기 버튼 */}
-                    <div className="block sm:hidden">
-                      {canGoBack() && (
-                        <Button
-                          onClick={handleGoBack}
-                          variant="outline"
-                          size="lg"
-                          className="w-full px-4 py-2 text-sm font-bold border-2 shadow-[0_4px_12px_rgba(0,0,0,0.05)]"
-                        >
-                          이전 질문
-                        </Button>
-                      )}
-                    </div>
+                  {/* 모바일 전용 뒤로가기 버튼 */}
+                  <div className="block sm:hidden">
+                    {canGoBack() && (
+                      <Button
+                        onClick={handleGoBack}
+                        variant="outline"
+                        size="lg"
+                        className="w-full px-4 py-2 text-sm font-bold border-2 shadow-[0_4px_12px_rgba(0,0,0,0.05)]"
+                      >
+                        이전 질문
+                      </Button>
+                    )}
                   </div>
                 </div>
               )}
