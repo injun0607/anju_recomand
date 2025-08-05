@@ -217,15 +217,6 @@ export default function QuestionsPage() {
       {/* 진행 상황 바 */}
       <div className="bg-white shadow-sm">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center space-x-2">
-              <div className="w-3 h-3 bg-[#7AC8A4] rounded-full animate-pulse"></div>
-              <span className="text-sm font-semibold text-[#333333]">진행 상황</span>
-            </div>
-            <span className="text-sm font-bold text-[#FF6363] bg-[#FF6363]/10 px-3 py-1 rounded-full">
-              {Math.round((currentStep / totalSteps) * 100)}%
-            </span>
-          </div>
           <div className="relative">
             <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
               <div

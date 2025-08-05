@@ -226,9 +226,9 @@ export const QUESTIONS: Record<string, QuestionFlow> = {
     ]
   },
 
-  //조리 가능 여부
-  'cook': {
-    id: 'cook',
+  //장소 여부
+  'place': {
+    id: 'place',
     question: '오늘 안주는 어디서 먹을 거야?',
     type: 'single',
     icon: '👨‍🍳',
@@ -262,8 +262,8 @@ export const QUESTIONS: Record<string, QuestionFlow> = {
   },
 
   //냄새 신경 여부
-  'smell': {
-    id: 'smell',
+  'atmosphere': {
+    id: 'atmosphere',
     question: '오늘 안주는 어떤 분위기에 어울렸으면 해?',
     type: 'single',
     icon: '👃',
@@ -463,20 +463,20 @@ export const FIRST_QUESTION_ID = 'drink-type';
 // 질문 순서
 export const QUESTION_ORDER = [
   'drink-type',
-  'taste',
-  'mood',
-  'hunger',
   'price',
-  'restrictions',
-  'texture',
-  'cook',
-  'smell',
-  'temperature',
-  'style',
+  'hunger',
+  'mood',
   'feel',
+  'taste',
+  'texture',
+  'restrictions',
+  'place',
+  'atmosphere',
+  'style',
   'special',
   'retro',
   'sns',
+  'temperature',
 ];
 
 // 질문 플로우를 가져오는 함수
