@@ -124,89 +124,94 @@ function ResultsContent() {
           {/* 1등 카드 - 1층을 다 사용 */}
           {recommendedDishes.length > 0 && (
             <Card className="hover:shadow-[0_4px_12px_rgba(0,0,0,0.05)] transition-shadow bg-white border-0 shadow-[0_4px_12px_rgba(0,0,0,0.05)] rounded-2xl">
-              <CardHeader>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-2">
-                    <div className="bg-[#FF6363] text-white w-8 h-8 rounded-full text-lg font-bold flex items-center justify-center">
+              <div className="flex flex-col md:flex-row">
+                {/* 상단/왼쪽: 이미지 영역 */}
+                <div className="w-full md:w-1/2 h-64 md:h-auto bg-gradient-to-br from-[#FF6363]/10 to-[#7AC8A4]/10 rounded-t-2xl md:rounded-l-none md:rounded-r-2xl flex items-center justify-center">
+                  <img src="/images/dishes/oggonomiyaki.png" alt={recommendedDishes[0].name} className="w-full " />
+                </div>
+
+                {/* 하단/오른쪽: 정보 영역 */}
+                <div className="w-full md:w-1/2 p-6 md:p-8">
+                  <div className="flex items-center space-x-2 mb-4 md:mb-6">
+                    <div className="bg-[#FF6363] text-white w-10 h-10 md:w-12 md:h-12 rounded-full text-xl md:text-2xl font-bold flex items-center justify-center">
                       1
                     </div>
-                    <CardTitle className="text-xl text-[#333333] !text-4xl">{recommendedDishes[0].name}</CardTitle>
+                    <CardTitle className="text-2xl md:text-4xl text-[#333333]">{recommendedDishes[0].name}</CardTitle>
                   </div>
-                </div>
-                <CardDescription className="text-lg text-[#888888]">
-                  {recommendedDishes[0].description}
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {/* 매칭 점수 */}
-                  <div className="flex items-center space-x-2">
-                    <span className="text-base font-medium text-[#888888]">매칭도:</span>
+                  <CardDescription className="text-base md:text-xl text-[#888888] mb-4 md:mb-6">
+                    {recommendedDishes[0].description}
+                  </CardDescription>
+                  
+                  <div className="space-y-3 md:space-y-4">
+                    {/* 매칭 점수 */}
                     <div className="flex items-center space-x-2">
-                      <div className="w-32 bg-gray-200 rounded-full h-3">
-                        <div
-                          className="bg-[#FF6363] h-3 rounded-full transition-all duration-300"
-                          style={{ width: `${recommendedDishes[0].score}%` }}
-                        ></div>
+                      <span className="text-sm md:text-base font-medium text-[#888888]">매칭도:</span>
+                      <div className="flex items-center space-x-2">
+                        <div className="w-24 md:w-32 bg-gray-200 rounded-full h-2 md:h-3">
+                          <div
+                            className="bg-[#FF6363] h-2 md:h-3 rounded-full transition-all duration-300"
+                            style={{ width: `${recommendedDishes[0].score}%` }}
+                          ></div>
+                        </div>
+                        <span className="text-sm md:text-base font-bold text-[#FF6363]">{recommendedDishes[0].score}%</span>
                       </div>
-                      <span className="text-base font-bold text-[#FF6363]">{recommendedDishes[0].score}%</span>
                     </div>
-                  </div>
 
-                  {/* 주요 특징 */}
-                  <div className="space-y-2">
-                    <span className="text-base font-medium text-[#888888]">주요 특징:</span>
-                    <div className="flex flex-wrap gap-2">
-                      {recommendedDishes[0].tags.drinkType.slice(0, 2).map((drink: string) => (
-                        <span key={drink} className="text-sm bg-[#7AC8A4]/10 text-[#7AC8A4] px-3 py-1 rounded-full">
-                          {drink === 'soju' ? '소주' :
-                            drink === 'beer' ? '맥주' :
-                              drink === 'wine' ? '와인' :
-                                drink === 'makgeolli' ? '막걸리' : drink}
-                        </span>
-                      ))}
-                      {recommendedDishes[0].tags.taste.slice(0, 2).map((taste: string) => (
-                        <span key={taste} className="text-sm bg-[#FF6363]/10 text-[#FF6363] px-3 py-1 rounded-full">
-                          {taste === 'spicy' ? '매운맛' :
-                            taste === 'refreshing' ? '깔끔한맛' :
-                              taste === 'tangy' ? '새콤한맛' :
-                                taste === 'creamy' ? '크리미한맛' : taste}
-                        </span>
-                      ))}
+                    {/* 주요 특징 */}
+                    <div className="space-y-2">
+                      <span className="text-sm md:text-base font-medium text-[#888888]">주요 특징:</span>
+                      <div className="flex flex-wrap gap-1 md:gap-2">
+                        {[...recommendedDishes[0].tags.drinkType, ...recommendedDishes[0].tags.taste].slice(0, 3).map((tag: string, index: number) => (
+                          <span key={`${tag}-${index}`} className={`text-xs md:text-sm px-2 md:px-3 py-1 rounded-full ${
+                            recommendedDishes[0].tags.drinkType.includes(tag as any) 
+                              ? 'bg-[#7AC8A4]/10 text-[#7AC8A4]' 
+                              : 'bg-[#FF6363]/10 text-[#FF6363]'
+                          }`}>
+                            {tag === 'soju' ? '소주' :
+                              tag === 'beer' ? '맥주' :
+                                tag === 'wine' ? '와인' :
+                                  tag === 'makgeolli' ? '막걸리' :
+                                    tag === 'spicy' ? '매운맛' :
+                                      tag === 'refreshing' ? '깔끔한맛' :
+                                        tag === 'tangy' ? '새콤한맛' :
+                                          tag === 'creamy' ? '크리미한맛' : tag}
+                          </span>
+                        ))}
+                      </div>
                     </div>
-                  </div>
 
-                  {/* 분위기 */}
-                  <div className="flex items-center space-x-2">
-                    <span className="text-base font-medium text-[#888888]">분위기:</span>
-                    <div className="flex flex-wrap gap-2">
-                      {recommendedDishes[0].tags.mood.slice(0, 2).map((mood: string) => (
-                        <span key={mood} className="text-sm bg-[#7AC8A4]/10 text-[#7AC8A4] px-3 py-1 rounded-full">
-                          {mood === 'friends' ? '친구들과' :
-                            mood === 'couple' ? '연인과' :
-                              mood === 'solo' ? '혼술' :
-                                mood === 'festival' ? '회식' : mood}
-                        </span>
-                      ))}
+                    {/* 분위기 */}
+                    <div className="flex items-center space-x-2">
+                      <span className="text-sm md:text-base font-medium text-[#888888]">분위기:</span>
+                      <div className="flex flex-wrap gap-1 md:gap-2">
+                        {recommendedDishes[0].tags.mood.slice(0, 2).map((mood: string) => (
+                          <span key={mood} className="text-xs md:text-sm bg-[#7AC8A4]/10 text-[#7AC8A4] px-2 md:px-3 py-1 rounded-full">
+                            {mood === 'friends' ? '친구들과' :
+                              mood === 'couple' ? '연인과' :
+                                mood === 'solo' ? '혼술' :
+                                  mood === 'festival' ? '회식' : mood}
+                          </span>
+                        ))}
+                      </div>
                     </div>
-                  </div>
 
-                  {/* 가격대 */}
-                  <div className="flex items-center space-x-2">
-                    <span className="text-base font-medium text-[#888888]">가격대:</span>
-                    <div className="flex flex-wrap gap-2">
-                      {recommendedDishes[0].tags.price.map((price: string) => (
-                        <span key={price} className="text-sm bg-[#FF6363]/10 text-[#FF6363] px-3 py-1 rounded-full">
-                          {price === 'low' ? '저렴' :
-                            price === 'middle' ? '보통' :
-                              price === 'high' ? '고급' :
-                                price === 'premium' ? '프리미엄' : price}
-                        </span>
-                      ))}
+                    {/* 가격대 */}
+                    <div className="flex items-center space-x-2">
+                      <span className="text-sm md:text-base font-medium text-[#888888]">가격대:</span>
+                      <div className="flex flex-wrap gap-1 md:gap-2">
+                        {recommendedDishes[0].tags.price.map((price: string) => (
+                          <span key={price} className="text-xs md:text-sm bg-[#FF6363]/10 text-[#FF6363] px-2 md:px-3 py-1 rounded-full">
+                            {price === 'low' ? '저렴' :
+                              price === 'middle' ? '보통' :
+                                price === 'high' ? '고급' :
+                                  price === 'premium' ? '프리미엄' : price}
+                          </span>
+                        ))}
+                      </div>
                     </div>
                   </div>
                 </div>
-              </CardContent>
+              </div>
             </Card>
           )}
 
@@ -217,89 +222,94 @@ function ResultsContent() {
               
               return (
                 <Card key={dish.id} className="hover:shadow-[0_4px_12px_rgba(0,0,0,0.05)] transition-shadow bg-white border-0 shadow-[0_4px_12px_rgba(0,0,0,0.05)] rounded-2xl">
-                  <CardHeader>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-2">
-                        <div className="text-[#aaaaaa] pr-2 rounded-full text-md font-bold flex items-center justify-center">
+                  <div className="flex flex-col md:flex-row">
+                    {/* 상단/왼쪽: 이미지 영역 */}
+                    <div className="w-full md:w-1/2 h-48 md:h-auto bg-gradient-to-br from-[#FF6363]/10 to-[#7AC8A4]/10 rounded-t-2xl md:rounded-l-none md:rounded-r-2xl flex items-center justify-center">
+                      <img src="/images/dishes/oggonomiyaki.png" alt={dish.name} className="w-full" />
+                    </div>
+
+                    {/* 하단/오른쪽: 정보 영역 */}
+                    <div className="w-full md:w-1/2 p-4 md:p-6">
+                      <div className="flex items-center space-x-2 mb-3 md:mb-4">
+                        <div className="text-[#aaaaaa] pr-2 rounded-full text-sm md:text-md font-bold flex items-center justify-center">
                           {actualIndex + 1}
                         </div>
-                        <CardTitle className="text-xl text-[#333333]">{dish.name}</CardTitle>
+                        <CardTitle className="text-lg md:text-xl text-[#333333]">{dish.name}</CardTitle>
                       </div>
-                    </div>
-                    <CardDescription className="text-base text-[#888888]">
-                      {dish.description}
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-3">
-                      {/* 매칭 점수 */}
-                      <div className="flex items-center space-x-2">
-                        <span className="text-sm font-medium text-[#888888]">매칭도:</span>
+                      <CardDescription className="text-sm md:text-base text-[#888888] mb-3 md:mb-4">
+                        {dish.description}
+                      </CardDescription>
+                      
+                      <div className="space-y-2 md:space-y-3">
+                        {/* 매칭 점수 */}
                         <div className="flex items-center space-x-2">
-                          <div className="w-20 bg-gray-200 rounded-full h-2">
-                            <div
-                              className="bg-[#FF6363] h-2 rounded-full transition-all duration-300"
-                              style={{ width: `${dish.score}%` }}
-                            ></div>
+                          <span className="text-xs md:text-sm font-medium text-[#888888]">매칭도:</span>
+                          <div className="flex items-center space-x-2">
+                            <div className="w-16 md:w-20 bg-gray-200 rounded-full h-1.5 md:h-2">
+                              <div
+                                className="bg-[#FF6363] h-1.5 md:h-2 rounded-full transition-all duration-300"
+                                style={{ width: `${dish.score}%` }}
+                              ></div>
+                            </div>
+                            <span className="text-xs md:text-sm font-bold text-[#FF6363]">{dish.score}%</span>
                           </div>
-                          <span className="text-sm font-bold text-[#FF6363]">{dish.score}%</span>
                         </div>
-                      </div>
 
-                      {/* 주요 특징 */}
-                      <div className="space-y-2">
-                        <span className="text-sm font-medium text-[#888888]">주요 특징:</span>
-                        <div className="flex flex-wrap gap-1">
-                          {dish.tags.drinkType.slice(0, 2).map((drink: string) => (
-                            <span key={drink} className="text-xs bg-[#7AC8A4]/10 text-[#7AC8A4] px-2 py-1 rounded">
-                              {drink === 'soju' ? '소주' :
-                                drink === 'beer' ? '맥주' :
-                                  drink === 'wine' ? '와인' :
-                                    drink === 'makgeolli' ? '막걸리' : drink}
-                            </span>
-                          ))}
-                          {dish.tags.taste.slice(0, 2).map((taste: string) => (
-                            <span key={taste} className="text-xs bg-[#FF6363]/10 text-[#FF6363] px-2 py-1 rounded">
-                              {taste === 'spicy' ? '매운맛' :
-                                taste === 'refreshing' ? '깔끔한맛' :
-                                  taste === 'tangy' ? '새콤한맛' :
-                                    taste === 'creamy' ? '크리미한맛' : taste}
-                            </span>
-                          ))}
+                        {/* 주요 특징 */}
+                        <div className="space-y-1 md:space-y-2">
+                          <span className="text-xs md:text-sm font-medium text-[#888888]">주요 특징:</span>
+                          <div className="flex flex-wrap gap-1">
+                            {[...dish.tags.drinkType, ...dish.tags.taste].slice(0, 3).map((tag: string, index: number) => (
+                              <span key={`${tag}-${index}`} className={`text-xs px-1.5 md:px-2 py-0.5 md:py-1 rounded ${
+                                dish.tags.drinkType.includes(tag as any) 
+                                  ? 'bg-[#7AC8A4]/10 text-[#7AC8A4]' 
+                                  : 'bg-[#FF6363]/10 text-[#FF6363]'
+                              }`}>
+                                {tag === 'soju' ? '소주' :
+                                  tag === 'beer' ? '맥주' :
+                                    tag === 'wine' ? '와인' :
+                                      tag === 'makgeolli' ? '막걸리' :
+                                        tag === 'spicy' ? '매운맛' :
+                                          tag === 'refreshing' ? '깔끔한맛' :
+                                            tag === 'tangy' ? '새콤한맛' :
+                                              tag === 'creamy' ? '크리미한맛' : tag}
+                              </span>
+                            ))}
+                          </div>
                         </div>
-                      </div>
 
-                      {/* 분위기 */}
-                      <div className="flex items-center space-x-2">
-                        <span className="text-sm font-medium text-[#888888]">분위기:</span>
-                        <div className="flex flex-wrap gap-1">
-                          {dish.tags.mood.slice(0, 2).map((mood: string) => (
-                            <span key={mood} className="text-xs bg-[#7AC8A4]/10 text-[#7AC8A4] px-2 py-1 rounded">
-                              {mood === 'friends' ? '친구들과' :
-                                mood === 'couple' ? '연인과' :
-                                  mood === 'solo' ? '혼술' :
-                                    mood === 'festival' ? '회식' : mood}
-                            </span>
-                          ))}
+                        {/* 분위기 */}
+                        <div className="flex items-center space-x-2">
+                          <span className="text-xs md:text-sm font-medium text-[#888888]">분위기:</span>
+                          <div className="flex flex-wrap gap-1">
+                            {dish.tags.mood.slice(0, 2).map((mood: string) => (
+                              <span key={mood} className="text-xs bg-[#7AC8A4]/10 text-[#7AC8A4] px-1.5 md:px-2 py-0.5 md:py-1 rounded">
+                                {mood === 'friends' ? '친구들과' :
+                                  mood === 'couple' ? '연인과' :
+                                    mood === 'solo' ? '혼술' :
+                                      mood === 'festival' ? '회식' : mood}
+                              </span>
+                            ))}
+                          </div>
                         </div>
-                      </div>
 
-                      {/* 가격대 */}
-                      <div className="flex items-center space-x-2">
-                        <span className="text-sm font-medium text-[#888888]">가격대:</span>
-                        <div className="flex flex-wrap gap-1">
-                          {dish.tags.price.map((price: string) => (
-                            <span key={price} className="text-xs bg-[#FF6363]/10 text-[#FF6363] px-2 py-1 rounded">
-                              {price === 'low' ? '저렴' :
-                                price === 'middle' ? '보통' :
-                                  price === 'high' ? '고급' :
-                                    price === 'premium' ? '프리미엄' : price}
-                            </span>
-                          ))}
+                        {/* 가격대 */}
+                        <div className="flex items-center space-x-2">
+                          <span className="text-xs md:text-sm font-medium text-[#888888]">가격대:</span>
+                          <div className="flex flex-wrap gap-1">
+                            {dish.tags.price.map((price: string) => (
+                              <span key={price} className="text-xs bg-[#FF6363]/10 text-[#FF6363] px-1.5 md:px-2 py-0.5 md:py-1 rounded">
+                                {price === 'low' ? '저렴' :
+                                  price === 'middle' ? '보통' :
+                                    price === 'high' ? '고급' :
+                                      price === 'premium' ? '프리미엄' : price}
+                              </span>
+                            ))}
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </CardContent>
+                  </div>
                 </Card>
               );
             })}
