@@ -132,18 +132,38 @@ export default function QuestionsPage() {
         const currentAnswers = prev[questionId] || [];
         const newAnswers = Array.isArray(currentAnswers) ? [...currentAnswers] : [];
 
-        if (newAnswers.includes(answer)) {
-          // 이미 선택된 답변이면 제거
-          return {
-            ...prev,
-            [questionId]: newAnswers.filter(a => a !== answer)
-          };
+        // "다 좋아(none)" 옵션을 선택한 경우
+        if (answer === 'none') {
+          if (newAnswers.includes('none')) {
+            // 이미 선택되어 있으면 해제
+            return {
+              ...prev,
+              [questionId]: newAnswers.filter(a => a !== 'none')
+            };
+          } else {
+            // 선택하면 다른 모든 옵션 해제하고 "다 좋아"만 선택
+            return {
+              ...prev,
+              [questionId]: ['none']
+            };
+          }
         } else {
-          // 새로운 답변이면 추가
-          return {
-            ...prev,
-            [questionId]: [...newAnswers, answer]
-          };
+          // 다른 옵션을 선택한 경우
+          if (newAnswers.includes(answer)) {
+            // 이미 선택된 답변이면 제거
+            const filteredAnswers = newAnswers.filter(a => a !== answer);
+            return {
+              ...prev,
+              [questionId]: filteredAnswers
+            };
+          } else {
+            // 새로운 답변이면 추가 (단, "다 좋아" 옵션은 제거)
+            const filteredAnswers = newAnswers.filter(a => a !== 'none');
+            return {
+              ...prev,
+              [questionId]: [...filteredAnswers, answer]
+            };
+          }
         }
       });
     } else {

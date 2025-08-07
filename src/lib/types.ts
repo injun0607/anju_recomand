@@ -13,7 +13,6 @@ export interface QuestionFlow {
   id: string;
   question: string;
   type: QuestionType;
-  icon?: string;
   options?: QuestionOption[];
   nextQuestion?: string | ((answers: UserAnswers) => string);
   required?: boolean;
@@ -25,10 +24,10 @@ export interface UserAnswers {
 }
 
 // 술 종류 타입
-export type DrinkType = 'soju' | 'beer' | 'wine' | 'makgeolli' | 'whiskey' | 'cocktail';
+export type Drink = 'soju' | 'beer' | 'wine' | 'makgeolli' | 'whiskey' | 'cocktail';
 
 // 맛 타입
-export type Taste = 'spicy' | 'refreshing' | 'tangy' | 'creamy' | 'none';
+export type Taste = 'spicy' | 'light' | 'tangy' | 'creamy' | 'none';
 
 // 분위기 타입
 export type Mood = 'solo'| 'friends' | 'festival' | 'couple' | 'camping' ;
@@ -43,16 +42,16 @@ export type Hunger = 'hungry' | 'soso' | 'little';
 export type Price = 'low' | 'middle' | 'high' | 'premium';
 
 // 제한사항 타입
-export type Restriction = 'seafood' | 'intestines' | 'feet';
+export type Restriction = 'seafood' | 'intestines' | 'feet' | 'none';
 
 // 식감 타입
 export type Texture = 'chewy' | 'soft' | 'crispy' | 'none';
 
-// 조리 방법 타입
-export type Cook = 'cook' | 'microwave' | 'none';
+// 장소 타입
+export type Place = 'home' | 'outside' | 'bar' | 'neighbor' | 'none';
 
 // 냄새 타입
-export type Smell = 'normal' | 'sensitive' | 'none';
+export type Atmosphere = 'peaceful' | 'active' | 'quiet' | 'none';
 
 // 온도 타입
 export type Temperature = 'warm' | 'cold' | 'none';
@@ -85,15 +84,15 @@ export interface SideDish {
   description: string;
   image?: string;
   tags:{
-    drinkType: DrinkType[];
+    drink: Drink[];
     taste: Taste[];
     mood: Mood[];
     hunger: Hunger[];
     price: Price[];
     restrictions: Restriction[];
     texture: Texture[];
-    cook: Cook[];
-    smell: Smell[];
+    place: Place[];
+    atmosphere: Atmosphere[];
     temperature: Temperature[];
     style: Style[];
     feel: Feel[];
@@ -107,14 +106,14 @@ export interface SideDish {
 // 추천 결과 인터페이스
 export interface RecommendationResult {
   sideDishes: SideDish[];
-  drinkType: DrinkType;
+  drinkType: Drink;
   reasoning: string;
   confidence: number; // 0-1
 }
 
 // 추천 로직 인터페이스
 export interface RecommendationLogic {
-  drinkType: DrinkType;
+  drinkType: Drink;
   Taste: Taste[];
   restrictions: Restriction[];
   result: SideDish[];

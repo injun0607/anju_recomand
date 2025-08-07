@@ -2,11 +2,10 @@ import { QuestionFlow } from '@/lib/types';
 
 export const QUESTIONS: Record<string, QuestionFlow> = {
   // 술 종류 선택
-  'drink-type': {
-    id: 'drink-type',
+  'drink': {
+    id: 'drink',
     question: '오늘은 어떤 술 마실 거야?',
     type: 'single',
-    icon: '🍺',
     options: [
       {
         id: 'soju',
@@ -46,7 +45,6 @@ export const QUESTIONS: Record<string, QuestionFlow> = {
     id: 'taste',
     question: '어떤 맛이 당겨?',
     type: 'single',
-    icon: '👅',
     options: [
       {
         id: 'spicy',
@@ -54,9 +52,9 @@ export const QUESTIONS: Record<string, QuestionFlow> = {
         value: 'spicy',
       },
       {
-        id: 'refreshing',
-        text: '담백한 게 당겨',
-        value: 'refreshing',
+        id: 'light',
+        text: '고소/담백한 게 당겨',
+        value: 'light',
       },
       {
         id: 'tangy',
@@ -81,7 +79,6 @@ export const QUESTIONS: Record<string, QuestionFlow> = {
     id: 'mood',
     question: '오늘 술자리는 누구랑 함께해?',
     type: 'single',
-    icon: '😊',
     options: [
       {
         id: 'solo',
@@ -90,7 +87,7 @@ export const QUESTIONS: Record<string, QuestionFlow> = {
       },
       {
         id: 'friends',
-        text: '친구들이랑 함께야',
+        text: '가족/친구들이랑 함께야',
         value: 'friends',
       },
       {
@@ -116,7 +113,6 @@ export const QUESTIONS: Record<string, QuestionFlow> = {
     id: 'hunger',
     question: '지금 배고픔 정도는 어때?',
     type: 'single',
-    icon: '🍽️',
     options: [
       {
         id: 'hungry',
@@ -141,7 +137,6 @@ export const QUESTIONS: Record<string, QuestionFlow> = {
     id: 'price',
     question: '예산은 어느 정도 생각하고 있어?',
     type: 'single',
-    icon: '💰',
     options: [
       {
         id: 'low',
@@ -171,7 +166,6 @@ export const QUESTIONS: Record<string, QuestionFlow> = {
     id: 'restrictions',
     question: '혹시 싫어하는 재료가 있어? (복수 선택 가능)',
     type: 'multiple',
-    icon: '🚫',
     options: [
       {
         id: 'seafood',
@@ -201,7 +195,6 @@ export const QUESTIONS: Record<string, QuestionFlow> = {
     id: 'texture',
     question: '어떤 식감을 좋아해?',
     type: 'single',
-    icon: '🥢',
     options: [
       {
         id: 'crispy',
@@ -231,22 +224,21 @@ export const QUESTIONS: Record<string, QuestionFlow> = {
     id: 'place',
     question: '오늘 안주는 어디서 먹을 거야?',
     type: 'single',
-    icon: '👨‍🍳',
     options: [
       {
-        id: 'cook',
+        id: 'home',
         text: '집에서 먹을 거야',
-        value: 'cook',
+        value: 'home',
       },
       {
-        id: 'microwave',
+        id: 'outside',
         text: '야외에서 먹을 거야',
-        value: 'microwave',
+        value: 'outside',
       },
       {
-        id: 'eat',
+        id: 'bar',
         text: '술집에서 마셔',
-        value: 'eat',
+        value: 'bar',
       },
       {
         id:'neighbor',
@@ -266,17 +258,16 @@ export const QUESTIONS: Record<string, QuestionFlow> = {
     id: 'atmosphere',
     question: '오늘 안주는 어떤 분위기에 어울렸으면 해?',
     type: 'single',
-    icon: '👃',
     options: [
       {
-        id: 'sensitive',
+        id: 'quiet',
         text: '조용하고 편한 분위기가 좋아',
-        value: 'sensitive',
+        value: 'quiet',
       },
       {
-        id: 'normal',
+        id: 'active',
         text: '활기차고 화려한 분위기가 좋아',
-        value: 'normal',
+        value: 'active',
       },
       {
         id: 'peaceful',
@@ -296,7 +287,6 @@ export const QUESTIONS: Record<string, QuestionFlow> = {
     id: 'temperature',
     question: '따뜻한 안주 vs 차가운 안주, 뭐가 좋아?',
     type: 'single',
-    icon: '🌡️',
     options: [
       {
         id: 'cold',
@@ -321,7 +311,6 @@ export const QUESTIONS: Record<string, QuestionFlow> = {
     id: 'style',
     question: '어떤 스타일의 안주가 좋아? (복수 선택 가능)',
     type: 'multiple',
-    icon: '🎨',
     options: [
       {
         id: 'soup',
@@ -361,7 +350,6 @@ export const QUESTIONS: Record<string, QuestionFlow> = {
     id: 'feel',
     question: '오늘 하루는 어땠어?',
     type: 'single',
-    icon: '💭',
     options: [
       {
         id: 'happy',
@@ -386,7 +374,6 @@ export const QUESTIONS: Record<string, QuestionFlow> = {
     id: 'special',
     question: '평소보다 특별한 걸 먹고 싶어?',
     type: 'single',
-    icon: '⭐',
     options: [
       {
         id: 'yes',
@@ -411,7 +398,6 @@ export const QUESTIONS: Record<string, QuestionFlow> = {
     id: 'retro',
     question: '복고 감성 나는 옛날 스타일 안주 어때?',
     type: 'single',
-    icon: '📻',
     options: [
       {
         id: 'like',
@@ -436,7 +422,6 @@ export const QUESTIONS: Record<string, QuestionFlow> = {
     id: 'sns',
     question: '요즘 유행하는 안주는 어때?',
     type: 'single',
-    icon: '📱',
     options: [
       {
         id: 'like',
@@ -458,11 +443,11 @@ export const QUESTIONS: Record<string, QuestionFlow> = {
 };
 
 // 첫 번째 질문 ID
-export const FIRST_QUESTION_ID = 'drink-type';
+export const FIRST_QUESTION_ID = 'drink';
 
 // 질문 순서
 export const QUESTION_ORDER = [
-  'drink-type',
+  'drink',
   'price',
   'hunger',
   'mood',

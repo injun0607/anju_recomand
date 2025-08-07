@@ -4,11 +4,12 @@ import { useState, useEffect, useCallback, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
+import { ShareModal } from '@/components/ui/ShareModal';
 import { useAppStore, useAppActions } from '@/store/useAppStore';
 import { getRecommendations } from '@/data/side-dishes';
 import { DRINK_TYPES } from '@/lib/constants';
 import { generateKakaoShareUrl } from '@/lib/utils';
-import { DrinkType, SideDish } from '@/lib/types';
+import { Drink, SideDish } from '@/lib/types';
 
 interface RecommendedDish extends SideDish {
   score: number;
@@ -24,8 +25,9 @@ function ResultsContent() {
   const { reset } = useAppActions();
 
   const [recommendedDishes, setRecommendedDishes] = useState<RecommendedDish[]>([]);
-  const [selectedDrinkType, setSelectedDrinkType] = useState<DrinkType | null>(null);
+  const [selectedDrinkType, setSelectedDrinkType] = useState<Drink | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
 
   // 중간 결과인지 확인
   const isIntermediate = searchParams.get('intermediate') === 'true';
@@ -47,29 +49,23 @@ function ResultsContent() {
     const recommendations = getRecommendations(answers, maxResults);
 
     setRecommendedDishes(recommendations);
-    setSelectedDrinkType(answers['drink-type'] as DrinkType);
+    setSelectedDrinkType(answers['drink'] as Drink);
     setIsLoading(false);
 
     // 추천 결과 저장
     setRecommendations([{
       sideDishes: recommendations,
-      drinkType: answers['drink-type'] as DrinkType,
+      drinkType: answers['drink'] as Drink,
       reasoning: isIntermediate
         ? `지금까지의 답변으로 추천하는 안주들입니다. 더 정확한 결과를 원하시면 계속 진행해보세요!`
-        : `선택하신 ${DRINK_TYPES[answers['drink-type'] as DrinkType]?.name}와 잘 어울리는 안주들을 추천드립니다.`,
+        : `선택하신 ${DRINK_TYPES[answers['drink'] as Drink]?.name}와 잘 어울리는 안주들을 추천드립니다.`,
       confidence: isIntermediate ? 0.65 : 0.85
     }]);
   }, [answers, router, setRecommendations, isIntermediate]);
 
-  // 카카오톡 공유
+  // 공유 모달 열기
   const handleShare = () => {
-    if (recommendedDishes.length > 0 && selectedDrinkType) {
-      const shareUrl = generateKakaoShareUrl(
-        DRINK_TYPES[selectedDrinkType].name,
-        recommendedDishes
-      );
-      window.open(shareUrl, '_blank');
-    }
+    setIsShareModalOpen(true);
   };
 
   // 다시 시작
@@ -107,7 +103,7 @@ function ResultsContent() {
             <h1 className="text-xl font-bold text-[#333333] cursor-pointer" onClick={goHome}>🍺 안주 추천</h1>
             <div className="flex space-x-4">
               <Button variant="outline" onClick={handleShare}>
-                카카오톡 공유
+                공유하기
               </Button>
               <Button variant="outline" onClick={handleRestart}>
                 다시 시작
@@ -126,8 +122,15 @@ function ResultsContent() {
             <Card className="hover:shadow-[0_4px_12px_rgba(0,0,0,0.05)] transition-shadow bg-white border-0 shadow-[0_4px_12px_rgba(0,0,0,0.05)] rounded-2xl">
               <div className="flex flex-col md:flex-row">
                 {/* 상단/왼쪽: 이미지 영역 */}
-                <div className="w-full md:w-1/2 h-64 md:h-auto bg-gradient-to-br from-[#FF6363]/10 to-[#7AC8A4]/10 rounded-t-2xl md:rounded-l-none md:rounded-r-2xl flex items-center justify-center">
-                  <img src="/images/dishes/oggonomiyaki.png" alt={recommendedDishes[0].name} className="w-full " />
+                <div className="w-full md:w-1/2 aspect-square bg-gradient-to-br from-[#FF6363]/10 to-[#7AC8A4]/10 rounded-t-2xl md:rounded-l-none md:rounded-r-2xl flex items-center justify-center relative overflow-hidden group">
+                  <img 
+                    src={recommendedDishes[0].image || '/images/dishes/friedChicken.png'} 
+                    alt={recommendedDishes[0].name} 
+                    className="max-w-full max-h-full object-contain p-4 transition-transform duration-300 group-hover:scale-105"
+                    onError={(e) => {
+                      e.currentTarget.src = '/images/dishes/friedChicken.png';
+                    }}
+                  />
                 </div>
 
                 {/* 하단/오른쪽: 정보 영역 */}
@@ -161,9 +164,9 @@ function ResultsContent() {
                     <div className="space-y-2">
                       <span className="text-sm md:text-base font-medium text-[#888888]">주요 특징:</span>
                       <div className="flex flex-wrap gap-1 md:gap-2">
-                        {[...recommendedDishes[0].tags.drinkType, ...recommendedDishes[0].tags.taste].slice(0, 3).map((tag: string, index: number) => (
+                        {[...recommendedDishes[0].tags.drink, ...recommendedDishes[0].tags.taste].slice(0, 3).map((tag: string, index: number) => (
                           <span key={`${tag}-${index}`} className={`text-xs md:text-sm px-2 md:px-3 py-1 rounded-full ${
-                            recommendedDishes[0].tags.drinkType.includes(tag as any) 
+                            recommendedDishes[0].tags.drink.includes(tag as any) 
                               ? 'bg-[#7AC8A4]/10 text-[#7AC8A4]' 
                               : 'bg-[#FF6363]/10 text-[#FF6363]'
                           }`}>
@@ -224,8 +227,15 @@ function ResultsContent() {
                 <Card key={dish.id} className="hover:shadow-[0_4px_12px_rgba(0,0,0,0.05)] transition-shadow bg-white border-0 shadow-[0_4px_12px_rgba(0,0,0,0.05)] rounded-2xl">
                   <div className="flex flex-col md:flex-row">
                     {/* 상단/왼쪽: 이미지 영역 */}
-                    <div className="w-full md:w-1/2 h-48 md:h-auto bg-gradient-to-br from-[#FF6363]/10 to-[#7AC8A4]/10 rounded-t-2xl md:rounded-l-none md:rounded-r-2xl flex items-center justify-center">
-                      <img src="/images/dishes/oggonomiyaki.png" alt={dish.name} className="w-full" />
+                    <div className="w-full md:w-1/2 aspect-square bg-gradient-to-br from-[#FF6363]/10 to-[#7AC8A4]/10 rounded-t-2xl md:rounded-l-none md:rounded-r-2xl flex items-center justify-center relative overflow-hidden group">
+                      <img 
+                        src={dish.image || '/images/dishes/friedChicken.png'} 
+                        alt={dish.name} 
+                        className="max-w-full max-h-full object-contain p-3 transition-transform duration-300 group-hover:scale-105"
+                        onError={(e) => {
+                          e.currentTarget.src = '/images/dishes/friedChicken.png';
+                        }}
+                      />
                     </div>
 
                     {/* 하단/오른쪽: 정보 영역 */}
@@ -256,12 +266,12 @@ function ResultsContent() {
                         </div>
 
                         {/* 주요 특징 */}
-                        <div className="space-y-1 md:space-y-2">
+                        <div className="flex space-x-2 space-y-1 md:space-y-2">
                           <span className="text-xs md:text-sm font-medium text-[#888888]">주요 특징:</span>
                           <div className="flex flex-wrap gap-1">
-                            {[...dish.tags.drinkType, ...dish.tags.taste].slice(0, 3).map((tag: string, index: number) => (
+                            {[...dish.tags.drink, ...dish.tags.taste].slice(0, 3).map((tag: string, index: number) => (
                               <span key={`${tag}-${index}`} className={`text-xs px-1.5 md:px-2 py-0.5 md:py-1 rounded ${
-                                dish.tags.drinkType.includes(tag as any) 
+                                dish.tags.drink.includes(tag as any) 
                                   ? 'bg-[#7AC8A4]/10 text-[#7AC8A4]' 
                                   : 'bg-[#FF6363]/10 text-[#FF6363]'
                               }`}>
@@ -339,7 +349,7 @@ function ResultsContent() {
               {/* 1층: 공유하기 버튼 */}
               <div className="flex justify-center w-full max-w-md mx-auto">
                 <Button onClick={handleShare} size="lg" className="w-full px-4 sm:px-6 lg:px-8 py-2 sm:py-3 lg:py-4 text-sm sm:text-base lg:text-lg font-bold transform hover:scale-[0.98] transition-all duration-300 shadow-[0_4px_12px_rgba(0,0,0,0.05)] hover:shadow-lg">
-                  카카오톡으로 공유하기
+                  공유하기
                 </Button>
               </div>
 
@@ -359,6 +369,14 @@ function ResultsContent() {
           )}
         </div>
       </main>
+
+      {/* 공유 모달 */}
+      <ShareModal
+        isOpen={isShareModalOpen}
+        onClose={() => setIsShareModalOpen(false)}
+        drinkType={selectedDrinkType}
+        recommendedDishes={recommendedDishes}
+      />
     </div>
   );
 }
