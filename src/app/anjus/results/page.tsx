@@ -122,11 +122,11 @@ function ResultsContent() {
             <Card className="hover:shadow-[0_4px_12px_rgba(0,0,0,0.05)] transition-shadow bg-white border-0 shadow-[0_4px_12px_rgba(0,0,0,0.05)] rounded-2xl">
               <div className="flex flex-col md:flex-row">
                 {/* 상단/왼쪽: 이미지 영역 */}
-                <div className="w-full md:w-1/2 aspect-square bg-gradient-to-br from-[#FF6363]/10 to-[#7AC8A4]/10 rounded-t-2xl md:rounded-l-none md:rounded-r-2xl flex items-center justify-center relative overflow-hidden group">
+                <div className="w-full md:w-1/2 aspect-square rounded-t-2xl md:rounded-l-none md:rounded-r-2xl flex items-center justify-center relative overflow-hidden group">
                   <img 
                     src={recommendedDishes[0].image || '/images/dishes/friedChicken.png'} 
                     alt={recommendedDishes[0].name} 
-                    className="max-w-full max-h-full object-contain p-4 transition-transform duration-300 group-hover:scale-105"
+                    className="max-w-full max-h-full object-contain p-4"
                     onError={(e) => {
                       e.currentTarget.src = '/images/dishes/friedChicken.png';
                     }}
@@ -161,7 +161,7 @@ function ResultsContent() {
                     </div>
 
                     {/* 주요 특징 */}
-                    <div className="space-y-2">
+                    <div className="flex space-x-2 space-y-2">
                       <span className="text-sm md:text-base font-medium text-[#888888]">주요 특징:</span>
                       <div className="flex flex-wrap gap-1 md:gap-2">
                         {[...recommendedDishes[0].tags.drink, ...recommendedDishes[0].tags.taste].slice(0, 3).map((tag: string, index: number) => (
@@ -227,11 +227,11 @@ function ResultsContent() {
                 <Card key={dish.id} className="hover:shadow-[0_4px_12px_rgba(0,0,0,0.05)] transition-shadow bg-white border-0 shadow-[0_4px_12px_rgba(0,0,0,0.05)] rounded-2xl">
                   <div className="flex flex-col md:flex-row">
                     {/* 상단/왼쪽: 이미지 영역 */}
-                    <div className="w-full md:w-1/2 aspect-square bg-gradient-to-br from-[#FF6363]/10 to-[#7AC8A4]/10 rounded-t-2xl md:rounded-l-none md:rounded-r-2xl flex items-center justify-center relative overflow-hidden group">
+                    <div className="w-full md:w-1/2 aspect-square rounded-t-2xl md:rounded-l-none md:rounded-r-2xl flex items-center justify-center relative overflow-hidden group">
                       <img 
                         src={dish.image || '/images/dishes/friedChicken.png'} 
                         alt={dish.name} 
-                        className="max-w-full max-h-full object-contain p-3 transition-transform duration-300 group-hover:scale-105"
+                        className="max-w-full max-h-full object-contain p-3"
                         onError={(e) => {
                           e.currentTarget.src = '/images/dishes/friedChicken.png';
                         }}

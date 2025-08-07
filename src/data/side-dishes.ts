@@ -7,7 +7,7 @@ export const ANJU_DATA: SideDish[] = [
     name: '삼겹살',
     category: 'meat',
     description: '고소하고 맛있는 돼지고기 삼겹살',
-    image: '/images/dishes/friedChicken.png',
+    image: '/images/dishes/samgyeopsal.png',
     tags: {
       drink: ['soju', 'makgeolli'],
       taste: ['light'],
@@ -103,7 +103,7 @@ export const ANJU_DATA: SideDish[] = [
     name: '육회',
     category: 'meat',
     description: '소고기로 만든 육회는 맛있는 안주 중 하나',
-    image: '/images/dishes/salmonSashimi.png',
+    image: '/images/dishes/yukhoe.png',
     tags: {
       drink: ['soju', 'makgeolli', 'beer'],
       taste: ['light', 'creamy'],
@@ -679,7 +679,7 @@ export const ANJU_DATA: SideDish[] = [
     name: "라면",
     category: "noodle",
     description: "뜨끈한 국물에 면이 어우러진 국민 야식",
-    image: "/images/dishes/jjambbong.png",
+    image: "/images/dishes/ramyeon.png",
     tags: {
       "drink": ["soju", "beer", "makgeolli"],
       "taste": ["spicy"],
