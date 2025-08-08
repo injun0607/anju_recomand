@@ -59,29 +59,18 @@ const getTagDisplayName = (tag: string, type: 'drink' | 'taste' | 'mood' | 'pric
   }
 };
 
-const getTagClassName = (tag: string, dish: RecommendedDish, isLarge: boolean = false): string => {
-  const baseClasses = isLarge
-    ? 'text-xs lg:text-sm px-2 lg:px-3 py-1 rounded-full'
-    : 'text-xs px-1.5 lg:px-2 py-0.5 lg:py-1 rounded';
 
-  if (dish.tags.drink.includes(tag as Drink)) {
-    return `${baseClasses} bg-[#7AC8A4]/10 text-[#7AC8A4]`;
-  } else {
-    return `${baseClasses} bg-[#FF6363]/10 text-[#FF6363]`;
-  }
-};
-
-const renderFeatureTags = (dish: RecommendedDish, isLarge: boolean = false) => {
-  const tags = [...dish.tags.drink, ...dish.tags.taste].slice(0, 3);
+const renderDrinkTags = (dish: RecommendedDish, isLarge: boolean = false) => {
+  const tags = [...dish.tags.drink].slice(0, 3);
 
   return tags.map((tag: string, index: number) => {
-    const tagType = dish.tags.drink.includes(tag as Drink) ? 'drink' : 'taste';
     return (
       <span
         key={`${tag}-${index}`}
-        className={getTagClassName(tag, dish, isLarge)}
+        className={`${isLarge ? 'text-xs lg:text-sm px-2 lg:px-3 py-1' : 'text-xs px-1.5 lg:px-2 py-0.5 lg:py-1'} 
+        rounded-full bg-[#7AC8A4]/10 text-[#7AC8A4]`}
       >
-        {getTagDisplayName(tag, tagType)}
+        {getTagDisplayName(tag, 'drink')}
       </span>
     );
   });
@@ -91,7 +80,8 @@ const renderMoodTags = (dish: RecommendedDish, isLarge: boolean = false) => {
   return dish.tags.mood.slice(0, 2).map((mood: string) => (
     <span
       key={mood}
-      className={`${isLarge ? 'text-xs lg:text-sm px-2 lg:px-3 py-1' : 'text-xs px-1.5 lg:px-2 py-0.5 lg:py-1'} rounded-full bg-[#7AC8A4]/10 text-[#7AC8A4]`}
+      className={`${isLarge ? 'text-xs lg:text-sm px-2 lg:px-3 py-1' : 'text-xs px-1.5 lg:px-2 py-0.5 lg:py-1'} 
+      rounded-full bg-[#888888]/10 text-[#888888]`}
     >
       {getTagDisplayName(mood, 'mood')}
     </span>
@@ -102,7 +92,8 @@ const renderPriceTags = (dish: RecommendedDish, isLarge: boolean = false) => {
   return dish.tags.price.map((price: string) => (
     <span
       key={price}
-      className={`${isLarge ? 'text-xs lg:text-sm px-2 lg:px-3 py-1' : 'text-xs px-1.5 lg:px-2 py-0.5 lg:py-1'} rounded-full bg-[#FF6363]/10 text-[#FF6363]`}
+      className={`${isLarge ? 'text-xs lg:text-sm px-2 lg:px-3 py-1' : 'text-xs px-1.5 lg:px-2 py-0.5 lg:py-1'} 
+      rounded-full bg-[#888888]/10 text-[#888888]`}
     >
       {getTagDisplayName(price, 'price')}
     </span>
@@ -364,7 +355,7 @@ export default function ResultsContent() {
                     <div className="flex items-center space-x-2">
                       <span className="text-sm lg:text-base font-medium text-[#888888]">술 종류</span>
                       <div className="flex flex-wrap gap-1 lg:gap-2">
-                        {renderFeatureTags(recommendedDishes[0], true)}
+                        {renderDrinkTags(recommendedDishes[0], true)}
                       </div>
                     </div>
 
@@ -438,9 +429,9 @@ export default function ResultsContent() {
 
                         {/* 주요 특징 */}
                         <div className="flex items-center space-x-2 lg:space-y-2">
-                          <span className="text-xs lg:text-sm font-medium text-[#888888]">주요 특징</span>
+                          <span className="text-xs lg:text-sm font-medium text-[#888888]">술 종류</span>
                           <div className="flex flex-wrap gap-1">
-                            {renderFeatureTags(dish, false)}
+                            {renderDrinkTags(dish, false)}
                           </div>
                         </div>
 
@@ -497,7 +488,7 @@ export default function ResultsContent() {
 
               {/* 2층: 다시 추천받기 버튼 */}
               <div className="flex justify-center w-full max-w-md mx-auto">
-                <Button variant="secondary" onClick={handleRestart} size="lg" className="w-full px-4 sm:px-6 lg:px-8 py-2 sm:py-3 lg:py-4 text-sm sm:text-base lg:text-lg font-bold border-2 shadow-[0_4px_12px_rgba(0,0,0,0.05)]">
+                <Button variant="secondary" onClick={handleRestart} size="lg" className="w-full px-4 sm:px-6 lg:px-8 py-2 sm:py-3 lg:py-4 text-sm sm:text-base lg:text-lg font-bold border-2 shadow-[0_4px_12px_rgba(0,0,0,0.05)] transform hover:scale-[0.98] transition-all duration-300 hover:shadow-lg">
                   다시 추천받기
                 </Button>
               </div>

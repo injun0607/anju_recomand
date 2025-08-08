@@ -3,6 +3,7 @@ import { Metadata } from 'next';
 import ResultsContent from './ResultsContent';
 import { DRINK_TYPES } from '@/lib/constants';
 import { Drink } from '@/lib/types';
+import { ANJU_DATA } from '@/data/side-dishes';
 
 // 동적 메타데이터 생성 함수
 export async function generateMetadata({ 
@@ -27,7 +28,10 @@ export async function generateMetadata({
       
       title = `${firstResult} - ${drinkName}와 함께하는 완벽한 안주 추천`;
       description = `${drinkName}와 함께 먹기 좋은 안주를 추천받았어요! 1위는 ${firstResult}입니다. 당신도 맞춤형 안주를 추천받아보세요!`;
-      image = '/images/dishes/friedChicken.png'; // 기본 이미지 사용
+      
+      // ANJU_DATA에서 해당 안주의 이미지 찾기
+      const foundDish = ANJU_DATA.find(dish => dish.name === firstResult);
+      image = foundDish?.image || '/images/dishes/friedChicken.png'; // 실제 이미지 또는 기본 이미지
       url = `https://yourdomain.com/anjus/results?drink_type=${drinkType}&first_result=${firstResult}`;
     } catch (error) {
       console.error('Failed to parse shared results for metadata:', error);
