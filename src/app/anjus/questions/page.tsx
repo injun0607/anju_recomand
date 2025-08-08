@@ -364,7 +364,7 @@ export default function QuestionsPage() {
             <div className="flex justify-center">
               {/* 5번째 질문에서 중간 결과 확인 옵션 */}
               {canShowIntermediateResults() ? (
-                <div className="flex flex-col space-y-2 sm:space-y-4 w-full max-w-md">
+                                 <div className="flex flex-col space-y-2 sm:space-y-0 w-full max-w-md">
                   <Button
                     onClick={goToNextQuestion}
                     disabled={
@@ -405,7 +405,7 @@ export default function QuestionsPage() {
                   </div>
                 </div>
               ) : isStageEnd() ? (
-                <div className="flex flex-col space-y-2 w-full max-w-md">
+                <div className="flex flex-col space-y-2 sm:space-y-0 w-full max-w-md">
                   <Button
                     onClick={handleConfirmAnswers}
                     disabled={
@@ -434,7 +434,7 @@ export default function QuestionsPage() {
                   </div>
                 </div>
               ) : (
-                <div className="flex flex-col xs:space-y-2 w-full max-w-md">                  
+                <div className="flex flex-col space-y-2 sm:space-y-0 w-full max-w-md">                  
                   <Button
                     onClick={goToNextQuestion}
                     disabled={

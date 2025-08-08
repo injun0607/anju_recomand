@@ -113,10 +113,10 @@ function ResultsContent() {
         </div>
       </header>
 
-      {/* 메인 콘텐츠 */}
-      <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* 추천 안주 목록 */}
-        <div className="space-y-8 mb-8">
+             {/* 메인 콘텐츠 */}
+       <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
+         {/* 추천 안주 목록 */}
+         <div className="space-y-4 sm:space-y-8 mb-4 sm:mb-8">
           {/* 1등 카드 - 1층을 다 사용 */}
           {recommendedDishes.length > 0 && (
             <Card className="hover:shadow-[0_4px_12px_rgba(0,0,0,0.05)] transition-shadow bg-white border-0 shadow-[0_4px_12px_rgba(0,0,0,0.05)] rounded-2xl">
@@ -133,8 +133,8 @@ function ResultsContent() {
                   />
                 </div>
 
-                {/* 하단/오른쪽: 정보 영역 */}
-                <div className="w-full md:w-1/2 p-6 md:p-8">
+                                 {/* 하단/오른쪽: 정보 영역 */}
+                 <div className="w-full md:w-1/2 p-4 sm:p-6 md:p-8">
                   <div className="flex items-center space-x-2 mb-4 md:mb-6">
                     <div className="bg-[#FF6363] text-white w-10 h-10 md:w-12 md:h-12 rounded-full text-xl md:text-2xl font-bold flex items-center justify-center">
                       1
@@ -145,7 +145,7 @@ function ResultsContent() {
                     {recommendedDishes[0].description}
                   </CardDescription>
                   
-                  <div className="space-y-3 md:space-y-4">
+                                     <div className="space-y-2 sm:space-y-3 md:space-y-4">
                     {/* 매칭 점수 */}
                     <div className="flex items-center space-x-2">
                       <span className="text-sm md:text-base font-medium text-[#888888]">매칭도:</span>
@@ -218,8 +218,8 @@ function ResultsContent() {
             </Card>
           )}
 
-          {/* 2등부터는 2개씩 나열 */}
-          <div className="grid md:grid-cols-2 gap-6">
+                     {/* 2등부터는 2개씩 나열 */}
+           <div className="grid md:grid-cols-2 gap-4 sm:gap-6">
             {recommendedDishes.slice(1).map((dish, index) => {
               const actualIndex = index + 1; // 2등부터 시작하므로 +1
               
@@ -238,8 +238,8 @@ function ResultsContent() {
                       />
                     </div>
 
-                    {/* 하단/오른쪽: 정보 영역 */}
-                    <div className="w-full md:w-1/2 p-4 md:p-6">
+                                         {/* 하단/오른쪽: 정보 영역 */}
+                     <div className="w-full md:w-1/2 p-3 sm:p-4 md:p-6">
                       <div className="flex items-center space-x-2 mb-3 md:mb-4">
                         <div className="text-[#aaaaaa] pr-2 rounded-full text-sm md:text-md font-bold flex items-center justify-center">
                           {actualIndex + 1}
@@ -250,7 +250,7 @@ function ResultsContent() {
                         {dish.description}
                       </CardDescription>
                       
-                      <div className="space-y-2 md:space-y-3">
+                                             <div className="space-y-1.5 sm:space-y-2 md:space-y-3">
                         {/* 매칭 점수 */}
                         <div className="flex items-center space-x-2">
                           <span className="text-xs md:text-sm font-medium text-[#888888]">매칭도:</span>
@@ -326,10 +326,10 @@ function ResultsContent() {
           </div>
         </div>
 
-        {/* 액션 버튼 */}
-        <div className="w-full text-center space-y-4">
-          {isIntermediate ? (
-            <div className="flex flex-col space-y-4">
+                 {/* 액션 버튼 */}
+         <div className="w-full text-center space-y-3 sm:space-y-4">
+                     {isIntermediate ? (
+             <div className="flex flex-col space-y-3 sm:space-y-4">
               {/* 1층: 계속하기 버튼 */}
               <div className="flex justify-center w-full max-w-md mx-auto">
                 <Button onClick={handleContinue} size="lg" className="w-full px-4 sm:px-6 lg:px-8 py-2 sm:py-3 lg:py-4 text-sm sm:text-base lg:text-lg font-bold transform hover:scale-[0.98] transition-all duration-300 shadow-[0_4px_12px_rgba(0,0,0,0.05)] hover:shadow-lg">
@@ -344,8 +344,8 @@ function ResultsContent() {
                 </Button>
               </div>
             </div>
-          ) : (
-            <div className="flex flex-col space-y-4">
+                     ) : (
+             <div className="flex flex-col space-y-3 sm:space-y-4">
               {/* 1층: 공유하기 버튼 */}
               <div className="flex justify-center w-full max-w-md mx-auto">
                 <Button onClick={handleShare} size="lg" className="w-full px-4 sm:px-6 lg:px-8 py-2 sm:py-3 lg:py-4 text-sm sm:text-base lg:text-lg font-bold transform hover:scale-[0.98] transition-all duration-300 shadow-[0_4px_12px_rgba(0,0,0,0.05)] hover:shadow-lg">
