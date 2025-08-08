@@ -127,7 +127,7 @@ export const ANJU_DATA: SideDish[] = [
     name: '오징어 숙회',
     category: 'seafood',
     description: '데친 오징어를 초장에 콕 찍어 먹는 담백한 안주',
-    image: '/images/dishes/eomukTang.png',
+    image: '/images/dishes/ojingeoSukhoe.png',
     tags: {
       drink: ['soju', 'makgeolli'],
       taste: ['light', 'tangy'],
