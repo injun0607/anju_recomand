@@ -1159,7 +1159,7 @@ export const ANJU_DATA: SideDish[] = [
     name: "참치카나페",
     category: "snack",
     description: "참치와 크래커의 조화로 가볍게 즐기는 핑거푸드",
-    image: "/images/tunaCanape.jpg",
+    image: "/images/dishes/tunaCanape.png",
     tags: {
       "drink": ["wine", "cocktail"],
       "taste": ["light"],
@@ -1183,7 +1183,7 @@ export const ANJU_DATA: SideDish[] = [
     name: "모짜렐라 토마토 카프레제",
     category: "vegetable",
     description: "신선한 모짜렐라와 토마토, 바질이 조화로운 샐러드 안주",
-    image: "/images/caprese.jpg",
+    image: "/images/dishes/caprese.png",
     tags: {
       "drink": ["wine", "cocktail"],
       "taste": ["light"],
@@ -1207,7 +1207,7 @@ export const ANJU_DATA: SideDish[] = [
     name: "고르곤졸라 피자",
     category: "snack",
     description: "고소한 블루치즈와 꿀이 어우러진 단짠 피자",
-    image: "/images/gorgonzolaPizza.jpg",
+    image: "/images/dishes/gorgonzolaPizza.png",
     tags: {
       "drink": ["wine", "beer", "cocktail"],
       "taste": ["creamy"],
@@ -1231,7 +1231,7 @@ export const ANJU_DATA: SideDish[] = [
     name: "훈제연어",
     category: "seafood",
     description: "부드러운 식감과 훈제 향이 매력적인 고급 연어 안주",
-    image: "/images/smokedSalmon.jpg",
+    image: "/images/dishes/smokedSalmon.png",
     tags: {
       "drink": ["wine", "whiskey", "cocktail"],
       "taste": ["light"],
@@ -1255,7 +1255,7 @@ export const ANJU_DATA: SideDish[] = [
     name: "로스트비프",
     category: "meat",
     description: "부드럽게 익힌 소고기를 얇게 썰어낸 클래식 안주",
-    image: "/images/roastBeef.jpg",
+    image: "/images/dishes/roastBeef.png",
     tags: {
       "drink": ["wine", "whiskey", "soju"],
       "taste": ["light"],
@@ -1285,7 +1285,8 @@ export const SCORING_CONFIG = {
   price: { weight: 4, match: 1.0, partial: 0.8 },
   restrictions: { weight: 3, match: 1.0, partial: 0.0 }, // 제한사항 (페널티)
   texture: { weight: 3, match: 1.0, partial: 0.6 },
-  cook: { weight: 2, match: 1.0, partial: 0.5 },
+  place: { weight: 2, match: 1.0, partial: 0.5 },
+  atmosphere: { weight: 2, match: 1.0, partial: 0.5 },
   smell: { weight: 2, match: 1.0, partial: 0.5 },
   temperature: { weight: 2, match: 1.0, partial: 0.5 },
   style: { weight: 4, match: 1.0, partial: 0.6 },

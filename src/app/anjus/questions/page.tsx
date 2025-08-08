@@ -222,7 +222,12 @@ export default function QuestionsPage() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-6">
             <div className="flex items-center space-x-3">
-              <h1 className="text-2xl font-bold text-[#333333] cursor-pointer" onClick={goHome}>안주 추천</h1>
+              <h1 className="text-2xl font-bold text-[#333333] cursor-pointer" onClick={goHome}>
+                <img src="/logo-ko.svg" alt="안주 추천 로고" className="h-8 w-auto" />
+              </h1>
+            </div>
+            <div className="flex items-center space-x-3">
+              <h1 className="text-xl font-bold text-[#333333]">안주 추천</h1>
             </div>
           </div>
         </div>
