@@ -2,13 +2,13 @@
 
 import { useState, useEffect, useCallback, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/Card';
+import { Card, CardTitle, CardDescription } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { ShareModal } from '@/components/ui/ShareModal';
 import { useAppStore, useAppActions } from '@/store/useAppStore';
 import { getRecommendations } from '@/data/side-dishes';
 import { DRINK_TYPES } from '@/lib/constants';
-import { generateKakaoShareUrl } from '@/lib/utils';
+
 import { Drink, SideDish } from '@/lib/types';
 
 interface RecommendedDish extends SideDish {
@@ -165,11 +165,11 @@ function ResultsContent() {
                       <span className="text-sm md:text-base font-medium text-[#888888]">주요 특징:</span>
                       <div className="flex flex-wrap gap-1 md:gap-2">
                         {[...recommendedDishes[0].tags.drink, ...recommendedDishes[0].tags.taste].slice(0, 3).map((tag: string, index: number) => (
-                          <span key={`${tag}-${index}`} className={`text-xs md:text-sm px-2 md:px-3 py-1 rounded-full ${
-                            recommendedDishes[0].tags.drink.includes(tag as any) 
-                              ? 'bg-[#7AC8A4]/10 text-[#7AC8A4]' 
-                              : 'bg-[#FF6363]/10 text-[#FF6363]'
-                          }`}>
+                                                     <span key={`${tag}-${index}`} className={`text-xs md:text-sm px-2 md:px-3 py-1 rounded-full ${
+                             recommendedDishes[0].tags.drink.includes(tag as Drink) 
+                               ? 'bg-[#7AC8A4]/10 text-[#7AC8A4]' 
+                               : 'bg-[#FF6363]/10 text-[#FF6363]'
+                           }`}>
                             {tag === 'soju' ? '소주' :
                               tag === 'beer' ? '맥주' :
                                 tag === 'wine' ? '와인' :
@@ -270,11 +270,11 @@ function ResultsContent() {
                           <span className="text-xs md:text-sm font-medium text-[#888888]">주요 특징:</span>
                           <div className="flex flex-wrap gap-1">
                             {[...dish.tags.drink, ...dish.tags.taste].slice(0, 3).map((tag: string, index: number) => (
-                              <span key={`${tag}-${index}`} className={`text-xs px-1.5 md:px-2 py-0.5 md:py-1 rounded ${
-                                dish.tags.drink.includes(tag as any) 
-                                  ? 'bg-[#7AC8A4]/10 text-[#7AC8A4]' 
-                                  : 'bg-[#FF6363]/10 text-[#FF6363]'
-                              }`}>
+                                                             <span key={`${tag}-${index}`} className={`text-xs px-1.5 md:px-2 py-0.5 md:py-1 rounded ${
+                                 dish.tags.drink.includes(tag as Drink) 
+                                   ? 'bg-[#7AC8A4]/10 text-[#7AC8A4]' 
+                                   : 'bg-[#FF6363]/10 text-[#FF6363]'
+                               }`}>
                                 {tag === 'soju' ? '소주' :
                                   tag === 'beer' ? '맥주' :
                                     tag === 'wine' ? '와인' :

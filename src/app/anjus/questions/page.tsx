@@ -19,7 +19,7 @@ export default function QuestionsPage() {
   const [selectedAnswers, setSelectedAnswers] = useState<Record<string, string | string[]>>({});
   const [currentStep, setCurrentStep] = useState(1);
   const [totalSteps, setTotalSteps] = useState(0);
-  const [completedSteps, setCompletedSteps] = useState<number[]>([]);
+
 
   // 진행 상황 계산
   const calculateProgress = useCallback(() => {
@@ -29,13 +29,7 @@ export default function QuestionsPage() {
     setCurrentStep(currentIndex + 1);
     setTotalSteps(totalQuestions);
 
-    // 완료된 단계 계산 (5, 10, 15, 20 단위)
-    const completed = [];
-    if (currentIndex >= 4) completed.push(5);
-    if (currentIndex >= 9) completed.push(10);
-    if (currentIndex >= 14) completed.push(15);
-    if (currentIndex >= 19) completed.push(20);
-    setCompletedSteps(completed);
+
   }, [currentQuestion]);
 
   const goHome = () => {

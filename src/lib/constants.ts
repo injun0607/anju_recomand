@@ -1,7 +1,7 @@
-import { DrinkType, SideDishCategory } from './types';
+import { Drink, SideDishCategory } from './types';
 
 // 술 종류 정보
-export const DRINK_TYPES: Record<DrinkType, { name: string; description: string; icon: string }> = {
+export const DRINK_TYPES: Record<Drink, { name: string; description: string; icon: string }> = {
   soju: {
     name: '소주',
     description: '한국의 대표적인 증류주',

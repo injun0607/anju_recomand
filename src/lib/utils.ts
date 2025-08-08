@@ -1,4 +1,4 @@
-import { UserAnswers, SideDish, DrinkType, Taste, Restriction } from './types';
+import { UserAnswers, SideDish, Drink, Taste, Restriction } from './types';
 
 /**
  * 로컬 스토리지에서 데이터를 가져오는 함수
@@ -85,14 +85,14 @@ export function getNextQuestion(
  */
 export function calculateRecommendationScore(
   sideDish: SideDish,
-  drinkType: DrinkType,
+  drink: Drink,
   taste: Taste[],
   restrictions: Restriction[]
 ): number {
   let score = 0;
   
   // 술 종류 호환성 체크
-  if (sideDish.tags.drinkType.includes(drinkType)) {
+  if (sideDish.tags.drink.includes(drink)) {
     score += 30;
   }
   
@@ -117,7 +117,7 @@ export function calculateRecommendationScore(
  */
 export function sortSideDishesByScore(
   sideDishes: SideDish[],
-  drinkType: DrinkType,
+  drinkType: Drink,
   taste: Taste[],
   restrictions: Restriction[]
 ): SideDish[] {

@@ -14,7 +14,6 @@ interface AppStore extends AppState {
   setLoading: (loading: boolean) => void;
   setError: (error: string | null) => void;
   clearError: () => void;
-  setQuestionProgress: (progress: QuestionProgress) => void;
   reset: () => void;
   
   // 뒤로가기 관련 액션들
@@ -96,10 +95,7 @@ export const useAppStore = create<AppStore>()((set, get) => ({
     set({ error: null });
   },
 
-  // 질문 진행 상태 설정
-  setQuestionProgress: (progress: QuestionProgress) => {
-    // 메모리에서만 관리하므로 별도 저장 없음
-  },
+
 
   // 전체 초기화
   reset: () => {
@@ -194,7 +190,6 @@ export const useAppActions = () => {
     setLoading: store.setLoading,
     setError: store.setError,
     clearError: store.clearError,
-    setQuestionProgress: store.setQuestionProgress,
     reset: store.reset,
     goToPreviousQuestion: store.goToPreviousQuestion,
     canGoBack: store.canGoBack,

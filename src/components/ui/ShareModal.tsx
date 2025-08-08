@@ -3,14 +3,14 @@
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
-import { DrinkType, SideDish } from '@/lib/types';
+import { Drink, SideDish } from '@/lib/types';
 import { DRINK_TYPES } from '@/lib/constants';
 import { generateKakaoShareUrl } from '@/lib/utils';
 
 interface ShareModalProps {
   isOpen: boolean;
   onClose: () => void;
-  drinkType: DrinkType | null;
+  drinkType: Drink | null;
   recommendedDishes: SideDish[];
 }
 
